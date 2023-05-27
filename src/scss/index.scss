@@ -1,0 +1,182 @@
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import "./normalize.css";
+
+$header-black: #1c1d22;
+$gray-inactive: rgba(28, 29, 34, 0.5);
+
+body {
+  font-family: "Exo 2", sans-serif;
+  button {
+    appearance: none;
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  #todo-app {
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background-color: $header-black;
+      color: white;
+
+      &__hamburger {
+        .material-symbols-outlined {
+          font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
+        }
+      }
+    }
+    .app-wrapper {
+      min-height: calc(100vh - 62px);
+      display: flex;
+
+      .sidebar {
+        box-sizing: border-box;
+        min-width: 318px;
+        display: flex;
+        flex-direction: column;
+        padding: 32px 28px;
+        box-shadow: 40px 180px 80px rgba(28, 29, 34, 0.06);
+        gap: 16px;
+        font-size: 20px;
+
+        .top-filters {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          &__filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            svg {
+              width: 20px;
+            }
+          }
+        }
+        .projects {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          &__extend-icon {
+            transform: rotate(90deg);
+          }
+
+          &__projects-btn-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+            .icon-cont {
+              display: flex;
+              align-items: center;
+              gap: 16px;
+
+              svg {
+                cursor: pointer;
+              }
+            }
+          }
+
+          &__list {
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
+            padding-left: 16px;
+            gap: 8px;
+          }
+
+          &__item {
+            color: $gray-inactive;
+          }
+        }
+      }
+      .main {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 46px;
+        gap: 16px;
+
+        .name {
+          display: flex;
+          justify-content: flex-start;
+          width: 100%;
+          &__text {
+            font-size: 26px;
+            font-weight: 700;
+          }
+        }
+
+        .tasks {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          gap: 16px;
+
+          .task {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid black;
+            border-style: dashed;
+            border-radius: 25px;
+            padding: 16px;
+
+            input {
+              appearance: none;
+              background-color: #ffffff;
+              margin: 0;
+              font: inherit;
+              color: black;
+              width: 1.15em;
+              height: 1.15em;
+              border: 0.15em solid black;
+              border-radius: 25px;
+              transform: translateY(-0.075em);
+              display: grid;
+              place-content: center;
+
+              &::before {
+                content: "";
+                width: 0.65em;
+                height: 0.65em;
+                border-radius: 25px;
+                transform: scale(0);
+                transition: 120ms transform ease-in-out;
+                box-shadow: inset 1em 1em $header-black;
+              }
+
+              &:checked::before {
+                transform: scale(1);
+              }
+            }
+
+            &__text-wrapper {
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+              gap: 8px;
+            }
+
+            &__content {
+              font-weight: 600;
+            }
+          }
+
+          &__add-todo-btn {
+            display: flex;
+            gap: 8px;
+          }
+        }
+      }
+    }
+  }
+}
