@@ -35,19 +35,3 @@ function btnSuccess(input, button) {
 export function checkInput() {
   btnSuccess(projectInputName, projectAddBtn);
 }
-
-export function getInputValue(e) {
-  e.preventDefault();
-  const addBtn = projectsSectionWrapper.querySelector(
-    ".project-create__btn-add-project"
-  );
-  if (
-    e.target.classList.contains("project-create__btn-add-project") &&
-    addBtn.disabled === true
-  ) {
-    let prjName = projectsSectionWrapper.querySelector(
-      "#project-create__name"
-    ).value;
-    return prjName;
-  }
-}
