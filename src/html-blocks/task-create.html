@@ -1,0 +1,35 @@
+<div class="task-create">
+  <form action="">
+    <div class="info-wrapper">
+      <div class="info-wrapper__content">
+        <input
+          type="text"
+          name="content"
+          id="content"
+          placeholder="Task name"
+          required
+        />
+      </div>
+      <div class="info-wrapper__description">
+        <input
+          type="text"
+          name="description"
+          id="description"
+          placeholder="Description"
+        />
+      </div>
+      <div class="info-wrapper__additional">
+        <input type="date" name="date" id="date" />
+        <select name="priority" id="priority">
+          <option value="priority1">Priority 1</option>
+          <option value="priority2">Priority 2</option>
+          <option value="priority3">Priority 3</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-btn-wrapper">
+      <button type="button" class="form-btn-wrapper__btn-cancel">Cancel</button>
+      <button class="form-btn-wrapper__btn-add-task">Add task</button>
+    </div>
+  </form>
+</div>
