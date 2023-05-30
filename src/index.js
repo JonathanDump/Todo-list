@@ -10,21 +10,13 @@ import {
   projectInputName,
   projectAddBtn,
 } from "./modules/dom-control";
-import { createProject } from "./modules/project-create";
+import { initialCreateProject } from "./modules/project-control";
+import { setProjectToStorage } from "./modules/storage-control";
 import "./scss/index.scss";
 
-const projects = [];
+// const projects = [];
 
-console.log("22");
-
-//function to enable add-btn on create form(call it when input is changing)
-function success() {
-  if (document.querySelector(".info-wrapper__content").value === "") {
-    document.querySelector(".form-btn-wrapper__btn-add-task").disabled = true;
-  } else {
-    document.querySelector(".form-btn-wrapper__btn-add-task").disabled = false;
-  }
-}
+console.log("123");
 
 // let prj = createProject("water plants");
 // console.log(prj);
@@ -40,7 +32,12 @@ projectInputName.addEventListener("input", checkInput);
 
 projectAddBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  projects.push(createProject(projectInputName.value));
+
+  // projects.push(createProject(projectInputName.value));
+  // localStorage.setItem("projects", JSON.stringify(projects));
+
+  setProjectToStorage(projectInputName.value);
+
   closeCreateProjectForm();
-  console.log(projects[0].getPrjName());
+  // console.log(projects);
 });
