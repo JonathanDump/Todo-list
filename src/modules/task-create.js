@@ -1,4 +1,10 @@
-const createTask = (taskName, taskDescription, taskDueDate, taskPriority) => {
+const createTask = (
+  taskName,
+  taskDescription,
+  taskDueDate,
+  taskPriority,
+  completed = false
+) => {
   let taskId = crypto.randomUUID();
   return {
     taskId,
@@ -6,5 +12,6 @@ const createTask = (taskName, taskDescription, taskDueDate, taskPriority) => {
     taskDescription,
     taskDueDate,
     taskPriority,
+    completed,
   };
 };

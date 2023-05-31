@@ -7,7 +7,7 @@ export const setProjectToStorage = (name) => {
   localStorage.setItem("projects", JSON.stringify(projects));
 };
 
-function getProjectsFromStorage() {
+export function getProjectsFromStorage() {
   if (!localStorage.getItem("projects")) {
     localStorage.setItem("projects", JSON.stringify([]));
     return [];

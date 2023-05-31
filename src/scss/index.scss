@@ -5,6 +5,7 @@ $header-black: #1c1d22;
 $border-black: #1c1d22;
 $gray-inactive: rgba(28, 29, 34, 0.5);
 $gray-btn-select: rgba(28, 29, 34, 0.04);
+$gray-primary: #f6f6f6;
 
 body {
   font-family: "Exo 2", sans-serif;
@@ -83,6 +84,7 @@ body {
             display: flex;
             flex-direction: column;
             border-radius: 18px;
+            position: relative;
 
             &:hover {
               background-color: $gray-btn-select;
@@ -182,16 +184,74 @@ body {
             flex-direction: column;
             font-size: 16px;
             padding: 0 16px;
+            gap: 8px;
+            position: relative;
           }
 
+          &__item-wrapper {
+            width: 100%;
+            height: fit-content;
+            position: relative;
+            border-radius: 18px;
+            // display: flex;
+            // flex-direction: column;
+
+            .more-window {
+              position: absolute;
+              // top: 50%;
+              background-color: $gray-primary;
+              display: flex;
+              flex-direction: column;
+              // gap: 8px;
+              border-radius: 18px;
+              // padding: 10px 18px;
+              top: calc(100% + 2px);
+              right: 0;
+              z-index: 999;
+              .more-btn {
+                display: flex;
+                align-items: last baseline;
+                gap: 8px;
+                padding: 10px 18px;
+                &:hover {
+                  background-color: $gray-btn-select;
+                }
+              }
+            }
+          }
           &__item {
             color: $gray-inactive;
             padding: 10px 18px;
             border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
 
             &:hover {
               color: $header-black;
               background-color: $gray-btn-select;
+            }
+
+            &:hover .item-more {
+              visibility: visible;
+            }
+
+            .item-more {
+              visibility: hidden;
+              display: flex;
+              align-items: center;
+              position: relative;
+
+              img {
+                height: 20px;
+                width: 20px;
+                filter: invert(5%);
+
+                &:hover {
+                  filter: none;
+                }
+              }
             }
           }
         }
@@ -396,7 +456,7 @@ body {
 }
 
 .list-btn-active {
-  color: $header-black;
+  color: $header-black !important;
   background-color: $gray-btn-select;
 }
 
@@ -421,4 +481,11 @@ body {
 .prj-create-form-disable {
   position: absolute;
   visibility: hidden;
+  pointer-events: none;
+  z-index: -999;
+}
+
+.more-btn-visible {
+  visibility: visible;
+  filter: none !important;
 }

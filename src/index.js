@@ -9,20 +9,19 @@ import {
   projectCancelBtn,
   projectInputName,
   projectAddBtn,
+  projectsList,
+  openMore,
+  deactivateMoreBtn,
+  populateProjectsList,
+  deleteProject,
 } from "./modules/dom-control";
-import { initialCreateProject } from "./modules/project-control";
+
 import { setProjectToStorage } from "./modules/storage-control";
 import "./scss/index.scss";
 
-// const projects = [];
-
 console.log("123");
 
-// let prj = createProject("water plants");
-// console.log(prj);
-// console.log(prj.getPrjId());
-
-// prj.addTask({ name: "wtr ficus" });
+populateProjectsList();
 
 projectsPlusBtn.addEventListener("click", openCreateProjectForm);
 
@@ -32,12 +31,22 @@ projectInputName.addEventListener("input", checkInput);
 
 projectAddBtn.addEventListener("click", (e) => {
   e.preventDefault();
-
-  // projects.push(createProject(projectInputName.value));
-  // localStorage.setItem("projects", JSON.stringify(projects));
-
   setProjectToStorage(projectInputName.value);
-
   closeCreateProjectForm();
-  // console.log(projects);
+  populateProjectsList();
 });
+
+projectsList.addEventListener("click", openMore);
+// (e) => console.log(e.target)
+
+document.addEventListener("click", ({ target }) => {
+  if (
+    document.querySelector(".more-window") &&
+    !target.closest(".more-window")
+  ) {
+    document.querySelector(".more-window").remove();
+    deactivateMoreBtn();
+  }
+});
+
+projectsList.addEventListener("click", deleteProject);

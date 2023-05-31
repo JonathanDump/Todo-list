@@ -41,14 +41,6 @@ export const initialCreateProject = (
   };
 };
 
-// export const recreateProject = ({ _prjName, _tasks, _prjId }) => {
-//   let fakeName = "Recreated obj";
-
-//   const prototype = initialCreateProject(_prjName);
-
-//   return Object.assign({}, prototype, { fakeName });
-// };
-
 // export const initialCreateProject = ( _prjName) => {
 //   let fakeName = "Fake Name";
 //   let _prjTasks = [];
