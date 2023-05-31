@@ -60,7 +60,7 @@ export function openMore(e) {
   projectBtn.classList.add("list-btn-active");
   e.target.classList.add("more-btn-visible");
 
-  projectWrapper.innerHTML += `<div class="more-window">
+  projectWrapper.innerHTML += `<div class="more-window"  data-id="${projectBtn.parentElement.dataset.id}">
   <button class="more-btn" id="more-btn-rename">
     <img src="${editIcon}" alt="" />
     <div class="more-btn__name">Rename</div>
@@ -94,7 +94,7 @@ export function populateProjectsList() {
   const projects = getProjectsFromStorage();
 
   projects.forEach((project) => {
-    projectsList.innerHTML += `<div class="projects__item-wrapper data-id="${project.getPrjId()}">
+    projectsList.innerHTML += `<div class="projects__item-wrapper" data-id="${project.getPrjId()}">
   <button class="projects__item">
     <div class="item-name">${project.getPrjName()}</div>
     <div class="item-more">
@@ -107,29 +107,26 @@ export function populateProjectsList() {
 }
 
 export function deleteProject(e) {
-  console.log(e.currentTarget);
-
   if (!projectsList.innerHTML) {
-    console.log("2");
     return;
   }
 
-  if (e.currentTarget.id !== "more-btn-delete") {
-    console.log("3");
+  if (e.target.parentElement.id !== "more-btn-delete") {
     return;
   }
-  console.log("4");
+
+  e.preventDefault();
+
   let projects = getProjectsFromStorage();
-
   const prjId = e.target.parentNode.parentNode.dataset.id;
 
   projects = projects.filter((prj) => prj.getPrjId() != prjId);
 
   localStorage.setItem("projects", JSON.stringify(projects));
 
-  document.querySelector(`[data-id=${prjId}]`).parentElement.remove();
+  document
+    .querySelector(`.projects__item-wrapper[data-id="${prjId}"]`)
+    .remove();
 
   populateProjectsList();
-
-  e.stopPropagation();
 }
