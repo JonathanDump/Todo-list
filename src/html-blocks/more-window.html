@@ -1,10 +1,34 @@
 <div class="more-window">
-  <button class="more-btn">
+  <button class="more-btn" id="more-btn-rename">
     <img src="/src/icons/edit-icon.svg" alt="" />
     <div class="more-btn__name">Rename</div>
   </button>
-  <button class="more-btn">
+  <button class="more-btn" id="more-btn-delete">
     <img src="/src/icons/trash-icon.svg" alt="" />
     <div class="more-btn__name">Delete</div>
   </button>
+</div>
+
+<div class="rename-wrapper">
+  <form action="" class="rename-form">
+    <div class="rename-form__input-wrapper">
+      <input autofocus type="text" placeholder="New name" required />
+    </div>
+    <div class="rename-form__btn-wrapper">
+      <button
+        type="button"
+        class="rename-form__btn cancel"
+        id="rename-form__btn-cancel"
+      >
+        Cancel
+      </button>
+      <button
+        class="rename-form__btn apply"
+        id="rename-form__btn-apply"
+        disabled
+      >
+        Apply
+      </button>
+    </div>
+  </form>
 </div>

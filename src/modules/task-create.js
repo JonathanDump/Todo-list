@@ -1,8 +1,8 @@
-const createTask = (
+export const initialCreateTask = (
   taskName,
-  taskDescription,
-  taskDueDate,
-  taskPriority,
+  taskDescription = "",
+  taskDueDate = "",
+  taskPriority = 3,
   completed = false
 ) => {
   let taskId = crypto.randomUUID();

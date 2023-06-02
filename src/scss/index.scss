@@ -149,7 +149,8 @@ body {
           }
 
           &__extend-icon {
-            transform: rotate(90deg);
+            display: flex;
+            align-items: center;
           }
 
           &__projects-btn-wrapper {
@@ -268,7 +269,7 @@ body {
           display: flex;
           flex-direction: column;
           max-width: 800px;
-          min-width: 0;
+          width: 100%;
           gap: 16px;
 
           .name {
@@ -290,7 +291,7 @@ body {
             .task {
               display: flex;
               align-items: center;
-              gap: 8px;
+              gap: 16px;
               border: 1px solid black;
               border-style: dotted;
               border-radius: 18px;
@@ -347,23 +348,6 @@ body {
               }
             }
 
-            &__add-todo-btn-wrapper {
-              display: flex;
-            }
-            &__add-todo-btn {
-              display: flex;
-              gap: 8px;
-              // min-width: 0;
-              color: $gray-inactive;
-
-              &:hover {
-                color: $header-black;
-                g {
-                  opacity: 1;
-                }
-              }
-            }
-
             .task-create {
               border-radius: 18px;
               border: 1px solid $border-black;
@@ -386,6 +370,7 @@ body {
 
                     input[type="text"] {
                       appearance: none;
+                      background-color: transparent;
 
                       width: 100%;
                       border: none;
@@ -449,15 +434,27 @@ body {
               }
             }
           }
+          .add-todo-btn-wrapper {
+            display: flex;
+
+            .add-todo-btn {
+              display: flex;
+              gap: 8px;
+              // min-width: 0;
+              color: $gray-inactive;
+
+              &:hover {
+                color: $header-black;
+                g {
+                  opacity: 1;
+                }
+              }
+            }
+          }
         }
       }
     }
   }
-}
-
-.list-btn-active {
-  color: $header-black !important;
-  background-color: $gray-btn-select;
 }
 
 @media (max-width: 750px) {
@@ -466,16 +463,21 @@ body {
   }
 }
 
+.list-btn-active {
+  color: $header-black !important;
+  background-color: $gray-btn-select;
+}
+
 .task-priority1 {
-  border-style: solid;
+  border-style: solid !important;
 }
 
 .task-priority2 {
-  border-style: dashed;
+  border-style: dashed !important;
 }
 
 .task-priority3 {
-  border-style: dotted;
+  border-style: dotted !important;
 }
 
 .prj-create-form-disable {
@@ -488,4 +490,66 @@ body {
 .more-btn-visible {
   visibility: visible;
   filter: none !important;
+}
+
+.add-todo-btn-disable {
+  display: none !important;
+}
+
+.rename-wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  padding: 10px 18px;
+  border-radius: 18px;
+  background-color: $gray-primary;
+  .rename-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &__input-wrapper {
+      display: flex;
+
+      input {
+        appearance: none;
+        width: 100%;
+        border: none;
+        line-height: 1.5rem;
+        outline: none;
+        border-radius: 18px;
+        padding: 0 6px;
+      }
+    }
+
+    &__btn-wrapper {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 8px;
+
+      button {
+        padding: 6px 12px;
+      }
+
+      .cancel {
+        &:hover {
+          background-color: $gray-btn-select;
+        }
+      }
+
+      .apply {
+        background-color: $gray-btn-select;
+        &:disabled {
+          color: $gray-inactive;
+          cursor: not-allowed;
+        }
+
+        &:enabled:hover {
+          background-color: rgba(0, 0, 0, 0.5);
+          color: white;
+        }
+      }
+    }
+  }
 }

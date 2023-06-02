@@ -4,7 +4,7 @@ import {
   openCreateProjectForm,
   closeCreateProjectForm,
   projectsSectionWrapper,
-  checkInput,
+  checkCreateProjectFormInput,
   getInputValue,
   projectCancelBtn,
   projectInputName,
@@ -14,6 +14,18 @@ import {
   deactivateMoreBtn,
   populateProjectsList,
   deleteProject,
+  openRenameProjectForm,
+  checkRenameProjectFormInput,
+  cancelProjectRename,
+  renameProjectDOM,
+  renderProjectPage,
+  addTodoButton,
+  openCreateTaskForm,
+  tasksList,
+  checkCreateTaskFormInput,
+  createTask,
+  closeCreateTaskForm,
+  cancelTaskCreate,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
@@ -27,7 +39,7 @@ projectsPlusBtn.addEventListener("click", openCreateProjectForm);
 
 projectCancelBtn.addEventListener("click", closeCreateProjectForm);
 
-projectInputName.addEventListener("input", checkInput);
+projectInputName.addEventListener("input", checkCreateProjectFormInput);
 
 projectAddBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -50,3 +62,23 @@ document.addEventListener("click", ({ target }) => {
 });
 
 projectsList.addEventListener("click", deleteProject);
+
+projectsList.addEventListener("click", openRenameProjectForm);
+
+projectsList.addEventListener("input", checkRenameProjectFormInput);
+
+projectsList.addEventListener("click", cancelProjectRename);
+
+projectsList.addEventListener("click", renameProjectDOM);
+
+projectsList.addEventListener("click", renderProjectPage);
+
+addTodoButton.addEventListener("click", openCreateTaskForm);
+
+tasksList.addEventListener("input", checkCreateTaskFormInput);
+
+tasksList.addEventListener("click", createTask);
+
+tasksList.addEventListener("click", cancelTaskCreate);
+
+// document.addEventListener("click", (e) => console.log(e.target));

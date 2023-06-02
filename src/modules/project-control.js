@@ -1,3 +1,5 @@
+import { getProjectsFromStorage } from "./storage-control";
+
 export const initialCreateProject = (
   _prjName,
   _prjTasks = [],
@@ -30,52 +32,30 @@ export const initialCreateProject = (
   };
 
   return {
+    setProjectName: function (name) {
+      this._prjName = name;
+    },
     getPrjName,
     getPrjTasks,
-    addTask,
     getPrjId,
     getPrjProps,
+    addTask,
     _prjName,
     _prjId,
     _prjTasks,
   };
 };
 
-// export const initialCreateProject = ( _prjName) => {
-//   let fakeName = "Fake Name";
-//   let _prjTasks = [];
-//   let _prjId = crypto.randomUUID();
+export function renameProject(newName, id) {
+  let projects = getProjectsFromStorage();
+  let project = projects.find((project) => project.getPrjId() === id);
 
-//   const getPrjName = () => {
-//     return _prjName;
-//   };
+  project._prjName = newName;
+  // project.setProjectName(newName);
 
-//   const addTask = (task) => {
-//     _prjTasks.push(task);
-//   };
+  localStorage.setItem("projects", JSON.stringify(projects));
+}
 
-//   const getPrjId = () => {
-//     return _prjId;
-//   };
-
-//   const getPrjTasks = () => {
-//     return _prjTasks;
-//   };
-
-//   const getPrjProps = () => {
-//     return {
-//       _prjName,
-//       _prjTasks,
-//       _prjId,
-//     };
-//   };
-
-//   return {
-//     getPrjName,
-//     getPrjTasks,
-//     addTask,
-//     getPrjId,
-//     getPrjProps,
-//     fakeName,
-//   };
-// };
+export function superSort(a, b) {
+  return b[this.field] - a[this.field];
+}

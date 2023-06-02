@@ -128,7 +128,8 @@ body #todo-app .app-wrapper .sidebar .projects__projects-section-wrapper .projec
   color: white;
 }
 body #todo-app .app-wrapper .sidebar .projects__extend-icon {
-  transform: rotate(90deg);
+  display: flex;
+  align-items: center;
 }
 body #todo-app .app-wrapper .sidebar .projects__projects-btn-wrapper {
   display: flex;
@@ -227,7 +228,7 @@ body #todo-app .app-wrapper .main__content-wrapper {
   display: flex;
   flex-direction: column;
   max-width: 800px;
-  min-width: 0;
+  width: 100%;
   gap: 16px;
 }
 body #todo-app .app-wrapper .main__content-wrapper .name {
@@ -248,7 +249,7 @@ body #todo-app .app-wrapper .main__content-wrapper .tasks {
 body #todo-app .app-wrapper .main__content-wrapper .tasks .task {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   border: 1px solid black;
   border-style: dotted;
   border-radius: 18px;
@@ -300,20 +301,6 @@ body #todo-app .app-wrapper .main__content-wrapper .tasks .task__description {
   overflow: hidden;
   min-width: 0;
 }
-body #todo-app .app-wrapper .main__content-wrapper .tasks__add-todo-btn-wrapper {
-  display: flex;
-}
-body #todo-app .app-wrapper .main__content-wrapper .tasks__add-todo-btn {
-  display: flex;
-  gap: 8px;
-  color: rgba(28, 29, 34, 0.5);
-}
-body #todo-app .app-wrapper .main__content-wrapper .tasks__add-todo-btn:hover {
-  color: #1c1d22;
-}
-body #todo-app .app-wrapper .main__content-wrapper .tasks__add-todo-btn:hover g {
-  opacity: 1;
-}
 body #todo-app .app-wrapper .main__content-wrapper .tasks .task-create {
   border-radius: 18px;
   border: 1px solid #1c1d22;
@@ -336,6 +323,7 @@ body #todo-app .app-wrapper .main__content-wrapper .tasks .task-create form .inf
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
+  background-color: transparent;
   width: 100%;
   border: none;
   line-height: 1.5rem;
@@ -382,10 +370,19 @@ body #todo-app .app-wrapper .main__content-wrapper .tasks .task-create form .for
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
 }
-
-.list-btn-active {
-  color: #1c1d22 !important;
-  background-color: rgba(28, 29, 34, 0.04);
+body #todo-app .app-wrapper .main__content-wrapper .add-todo-btn-wrapper {
+  display: flex;
+}
+body #todo-app .app-wrapper .main__content-wrapper .add-todo-btn-wrapper .add-todo-btn {
+  display: flex;
+  gap: 8px;
+  color: rgba(28, 29, 34, 0.5);
+}
+body #todo-app .app-wrapper .main__content-wrapper .add-todo-btn-wrapper .add-todo-btn:hover {
+  color: #1c1d22;
+}
+body #todo-app .app-wrapper .main__content-wrapper .add-todo-btn-wrapper .add-todo-btn:hover g {
+  opacity: 1;
 }
 
 @media (max-width: 750px) {
@@ -393,16 +390,21 @@ body #todo-app .app-wrapper .main__content-wrapper .tasks .task-create form .for
     display: absolute !important;
   }
 }
+.list-btn-active {
+  color: #1c1d22 !important;
+  background-color: rgba(28, 29, 34, 0.04);
+}
+
 .task-priority1 {
-  border-style: solid;
+  border-style: solid !important;
 }
 
 .task-priority2 {
-  border-style: dashed;
+  border-style: dashed !important;
 }
 
 .task-priority3 {
-  border-style: dotted;
+  border-style: dotted !important;
 }
 
 .prj-create-form-disable {
@@ -415,4 +417,59 @@ body #todo-app .app-wrapper .main__content-wrapper .tasks .task-create form .for
 .more-btn-visible {
   visibility: visible;
   filter: none !important;
+}
+
+.add-todo-btn-disable {
+  display: none !important;
+}
+
+.rename-wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  padding: 10px 18px;
+  border-radius: 18px;
+  background-color: #f6f6f6;
+}
+.rename-wrapper .rename-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rename-wrapper .rename-form__input-wrapper {
+  display: flex;
+}
+.rename-wrapper .rename-form__input-wrapper input {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 100%;
+  border: none;
+  line-height: 1.5rem;
+  outline: none;
+  border-radius: 18px;
+  padding: 0 6px;
+}
+.rename-wrapper .rename-form__btn-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.rename-wrapper .rename-form__btn-wrapper button {
+  padding: 6px 12px;
+}
+.rename-wrapper .rename-form__btn-wrapper .cancel:hover {
+  background-color: rgba(28, 29, 34, 0.04);
+}
+.rename-wrapper .rename-form__btn-wrapper .apply {
+  background-color: rgba(28, 29, 34, 0.04);
+}
+.rename-wrapper .rename-form__btn-wrapper .apply:disabled {
+  color: rgba(28, 29, 34, 0.5);
+  cursor: not-allowed;
+}
+.rename-wrapper .rename-form__btn-wrapper .apply:enabled:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
 }/*# sourceMappingURL=index.css.map */
