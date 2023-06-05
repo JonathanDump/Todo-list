@@ -26,6 +26,9 @@ import {
   createTask,
   closeCreateTaskForm,
   cancelTaskCreate,
+  toggleTaskStatus,
+  tasksListCompleted,
+  $qs,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
@@ -81,4 +84,17 @@ tasksList.addEventListener("click", createTask);
 
 tasksList.addEventListener("click", cancelTaskCreate);
 
+tasksList.addEventListener("change", toggleTaskStatus);
+tasksListCompleted.addEventListener("change", toggleTaskStatus);
+
 // document.addEventListener("click", (e) => console.log(e.target));
+
+// tasksList.addEventListener("focusout", () => {
+//   if (!$qs(".task-create")) {
+//     return;
+//   }
+//   const taskNameInput = $qs("#input-description");
+//   if (!taskNameInput.textContent.trim().length) {
+//     taskNameInput.innerHTML = "";
+//   }
+// });

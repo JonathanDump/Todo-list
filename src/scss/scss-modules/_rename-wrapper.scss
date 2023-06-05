@@ -1,0 +1,59 @@
+@import "/src/scss/scss-modules/variables";
+
+.rename-wrapper {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  padding: 10px 18px;
+  border-radius: 18px;
+  background-color: $gray-primary;
+  .rename-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    &__input-wrapper {
+      display: flex;
+
+      input {
+        appearance: none;
+        width: 100%;
+        border: none;
+        line-height: 1.5rem;
+        outline: none;
+        border-radius: 18px;
+        padding: 0 6px;
+      }
+    }
+
+    &__btn-wrapper {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 8px;
+
+      button {
+        padding: 6px 12px;
+      }
+
+      .cancel {
+        &:hover {
+          background-color: $gray-btn-select;
+        }
+      }
+
+      .apply {
+        background-color: $gray-btn-select;
+        &:disabled {
+          color: $gray-inactive;
+          cursor: not-allowed;
+        }
+
+        &:enabled:hover {
+          background-color: rgba(0, 0, 0, 0.5);
+          color: white;
+        }
+      }
+    }
+  }
+}

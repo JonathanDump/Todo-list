@@ -57,5 +57,5 @@ export function renameProject(newName, id) {
 }
 
 export function superSort(a, b) {
-  return b[this.field] - a[this.field];
+  return a[this.field] - b[this.field];
 }

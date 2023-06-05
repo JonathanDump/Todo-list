@@ -1,13 +1,17 @@
 import trashIcon from "/src/icons/trash-icon.svg";
 import editIcon from "/src/icons/edit-icon.svg";
 import moreIcon from "/src/icons/more-icon.svg";
+import dueDateIcon from "/src/icons/due-date.svg";
+import { compareAsc, format } from "date-fns";
 import { getProjectsFromStorage } from "./storage-control";
 import { renameProject, superSort } from "./project-control";
-import { initialCreateTask } from "./task-create";
+import { changeTaskStatus, findTask, initialCreateTask } from "./task-create";
 import {
   addTodoButtonModule,
   renameWrapperModule,
+  taskCompletedModule,
   taskCreateFormModule,
+  taskModule,
 } from "./dom-patterns";
 
 export const projectsPlusBtn = document.querySelector(".projects__add-icon");
@@ -27,6 +31,7 @@ export const projectsList = document.querySelector(".projects__list");
 const headerName = document.querySelector(".name__text");
 export const tasksList = document.querySelector(".tasks");
 export const addTodoButton = document.querySelector(".add-todo-btn-wrapper");
+export const tasksListCompleted = document.querySelector(".tasks.completed");
 
 /////////FUNCTIONS
 export const $qs = (selector) => document.querySelector(selector);
@@ -34,6 +39,7 @@ export const $qs = (selector) => document.querySelector(selector);
 export function openCreateProjectForm() {
   projectsSectionWrapper.classList.add("list-btn-active");
   projectCreateForm.classList.remove("prj-create-form-disable");
+  $qs("#project-create__name").focus();
 }
 
 export function closeCreateProjectForm() {
@@ -43,7 +49,7 @@ export function closeCreateProjectForm() {
 }
 
 function btnSuccess(input, button) {
-  button.disabled = !input.value;
+  button.disabled = !input.value.trim();
 }
 
 export function checkCreateProjectFormInput() {
@@ -114,11 +120,10 @@ export function populateProjectsList() {
 }
 
 export function deleteProject(e) {
-  if (!projectsList.innerHTML) {
-    return;
-  }
-
-  if (e.target.parentElement.id !== "more-btn-delete") {
+  if (
+    !projectsList.innerHTML ||
+    e.target.parentElement.id !== "more-btn-delete"
+  ) {
     return;
   }
 
@@ -130,10 +135,6 @@ export function deleteProject(e) {
   projects = projects.filter((prj) => prj.getPrjId() != prjId);
 
   localStorage.setItem("projects", JSON.stringify(projects));
-
-  document
-    .querySelector(`.projects__item-wrapper[data-id="${prjId}"]`)
-    .remove();
 
   populateProjectsList();
 }
@@ -161,7 +162,7 @@ export function openRenameProjectForm(e) {
   projectWrapper.innerHTML = renameWrapperModule;
 
   document.querySelector("#rename-form__input").value = prjName;
-
+  document.querySelector("#rename-form__input").focus();
   e.preventDefault();
 }
 
@@ -183,7 +184,6 @@ export function cancelProjectRename(e) {
   if (e.target.id !== "rename-form__btn-cancel") {
     return;
   }
-
   populateProjectsList();
 }
 
@@ -205,6 +205,8 @@ export function renameProjectDOM(e) {
 export function openCreateTaskForm() {
   addTodoButton.classList.add("add-todo-btn-disable");
   tasksList.innerHTML += taskCreateFormModule;
+  $qs("#input-content").focus();
+  $qs(".task-create").scrollIntoView();
 }
 
 export function checkCreateTaskFormInput(e) {
@@ -212,8 +214,13 @@ export function checkCreateTaskFormInput(e) {
     return;
   }
 
+  // if ($qs("#input-content").textContent.length > 500) {
+  //   e.preventDefault();
+  //   alert("Dfsf");
+  // }
+
   $qs(".form-btn-wrapper__btn-add-task").disabled =
-    !$qs("#input-content").value;
+    !$qs("#input-content").textContent.trim();
 }
 
 export function renderProjectPage(e) {
@@ -221,7 +228,8 @@ export function renderProjectPage(e) {
     !projectsList.innerHTML ||
     $qs(".rename-wrapper") ||
     e.target.classList.contains(".item-more") ||
-    !e.target.closest(".projects__item-wrapper")
+    !e.target.closest(".projects__item-wrapper") ||
+    e.target.id === "rename-form__btn-cancel"
   ) {
     return;
   }
@@ -229,6 +237,9 @@ export function renderProjectPage(e) {
   if (addTodoButton.innerHTML === "") {
     addTodoButton.innerHTML += addTodoButtonModule;
   }
+
+  const projectsButtons = [...document.querySelectorAll(".projects__item")];
+  projectsButtons.forEach((btn) => btn.classList.remove("list-btn-active"));
 
   tasksList.innerHTML = "";
   const projectId = e.target.closest(".projects__item-wrapper").dataset.id;
@@ -242,26 +253,57 @@ export function renderProjectPage(e) {
   projectButton.classList.add("list-btn-active");
   headerName.textContent = projectName;
   headerName.dataset.id = projectId;
-  loadTasksList(projectId);
+  populateTasksList(projectId);
 }
 
-function loadTasksList(projectId) {
+function populateTasksList(projectId) {
+  console.log(tasksListCompleted);
   const projects = getProjectsFromStorage();
   const project = projects.find((project) => project._prjId === projectId);
 
   const sortedTasks = project._prjTasks.sort(
-    superSort.bind({ field: "priority" })
+    superSort.bind({ field: "taskPriority" })
   );
 
   tasksList.innerHTML = "";
+  tasksListCompleted.innerHTML = "";
   sortedTasks.forEach((task) => {
-    tasksList.innerHTML += `<div class="task task-priority${task.taskPriority}" data-taskId="${task.taskId}">
-  <input type="checkbox" id="todo" name="todo" />
+    if (task.completed) {
+      tasksListCompleted.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
+      <div class="task__checkbox-wrapper">
+    <input type="checkbox" id="task-checkbox" name="task" checked/>
+    </div>
+    <div class="task__text-date-wrapper">
   <div class="task__text-wrapper">
     <div class="task__content">${task.taskName}</div>
     <div class="task__description">${task.taskDescription}</div>
   </div>
+  <div class="task__date-wrapper">
+  <img src="${dueDateIcon}" alt="" />
+  ${task.taskDueDate}
+  </div>
+  </div>
 </div>`;
+
+      const taskDom = document.querySelector(`.task[data-id="${task.taskId}"]`);
+      taskDom.classList.add("task-completed");
+    } else {
+      tasksList.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
+      <div class="task__checkbox-wrapper">
+    <input type="checkbox" id="task-checkbox" name="task"/>
+    </div>
+     <div class="task__text-date-wrapper">
+  <div class="task__text-wrapper">
+    <div class="task__content">${task.taskName}</div>
+    <div class="task__description">${task.taskDescription}</div>
+  </div>
+  <div class="task__date-wrapper">
+  <img src="${dueDateIcon}" alt="" />
+  ${task.taskDueDate}
+  </div>
+  </div>
+</div>`;
+    }
   });
 }
 export function createTask(e) {
@@ -271,9 +313,13 @@ export function createTask(e) {
   e.preventDefault();
 
   const projectId = headerName.dataset.id;
-  const taskName = $qs("#input-content").value;
-  const taskDescription = $qs("#input-description").value;
-  const taskDueDate = $qs("#date").value;
+  const taskName = $qs("#input-content").textContent;
+  const taskDescription = $qs("#input-description").textContent;
+  let taskDueDate = $qs("#date").value;
+  if (taskDueDate) {
+    taskDueDate = format(new Date($qs("#date").value), "dd MMM yyyy");
+  }
+  console.log(taskDueDate);
   const taskPriority = parseInt($qs("#priority").value);
   const projects = getProjectsFromStorage();
   const project = projects.find((project) => project.getPrjId() === projectId);
@@ -284,7 +330,7 @@ export function createTask(e) {
 
   localStorage.setItem("projects", JSON.stringify(projects));
 
-  loadTasksList(projectId);
+  populateTasksList(projectId);
   addTodoButton.classList.remove("add-todo-btn-disable");
 }
 
@@ -299,3 +345,39 @@ export function closeCreateTaskForm() {
   $qs(".task-create").remove();
   addTodoButton.classList.remove("add-todo-btn-disable");
 }
+
+export function toggleTaskStatus(e) {
+  if (e.target.id !== "task-checkbox") {
+    console.log("1");
+    return;
+  }
+
+  if (!e.target.closest(".task__checkbox-wrapper")) {
+    console.log(e.target);
+    console.log("2");
+    return;
+  }
+  console.log("3");
+  const checkBox = e.target;
+  const projectId = headerName.dataset.id;
+  const taskId = e.target.closest(".task").dataset.id;
+  const taskDom = document.querySelector(`.task[data-id="${taskId}"]`);
+
+  let projects = getProjectsFromStorage();
+  let task = findTask(projects, projectId, taskId);
+
+  // task.completed = checkBox.checked;
+  console.log(task);
+
+  changeTaskStatus(task, checkBox.checked);
+  if (task.completed) {
+    taskDom.classList.add("task-completed");
+  } else {
+    taskDom.classList.remove("task-completed");
+  }
+
+  localStorage.setItem("projects", JSON.stringify(projects));
+  populateTasksList(projectId);
+}
+
+// function setCheckBoxes() {}

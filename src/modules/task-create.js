@@ -15,3 +15,12 @@ export const initialCreateTask = (
     completed,
   };
 };
+
+export function findTask(projects, projectId, taskId) {
+  let project = projects.find((project) => project.getPrjId() === projectId);
+  return project._prjTasks.find((task) => task.taskId === taskId);
+}
+
+export function changeTaskStatus(task, status) {
+  task.completed = status;
+}

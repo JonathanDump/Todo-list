@@ -60,22 +60,18 @@ export const taskCreateFormModule = `<div class="task-create">
   <form action="">
     <div class="info-wrapper">
       <div class="info-wrapper__content">
-        <input
-          autofocus
-          type="text"
-          name="content"
+        <div  contenteditable="true"
           id="input-content"
           placeholder="Task name"
-          required
-        />
+          
+        ></div>
       </div>
       <div class="info-wrapper__description">
-        <input
-          type="text"
-          name="description"
+        <div  contenteditable="true"
           id="input-description"
           placeholder="Description"
-        />
+          
+        ></div>
       </div>
       <div class="info-wrapper__additional">
         <input type="date" name="date" id="date" />
@@ -92,3 +88,23 @@ export const taskCreateFormModule = `<div class="task-create">
     </div>
   </form>
 </div>`;
+
+// export const taskModule = `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
+//   <div class="task-checkbox-wrapper">
+//     <input type="checkbox" id="task-checkbox" name="task"/>
+//     </div>
+//   <div class="task__text-wrapper">
+//     <div class="task__content">${task.taskName}</div>
+//     <div class="task__description">${task.taskDescription}</div>
+//   </div>
+// </div>`;
+
+// export const taskCompletedModule = `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
+//   <div class="task-checkbox-wrapper">
+//     <input type="checkbox" id="task-checkbox" name="task" checked/>
+//     </div>
+//   <div class="task__text-wrapper">
+//     <div class="task__content">${task.taskName}</div>
+//     <div class="task__description">${task.taskDescription}</div>
+//   </div>
+// </div>`;

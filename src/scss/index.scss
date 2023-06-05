@@ -1,11 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "./normalize.css";
-
-$header-black: #1c1d22;
-$border-black: #1c1d22;
-$gray-inactive: rgba(28, 29, 34, 0.5);
-$gray-btn-select: rgba(28, 29, 34, 0.04);
-$gray-primary: #f6f6f6;
+@import "/src/scss/scss-modules/rename-wrapper";
+@import "/src/scss/scss-modules/variables";
 
 body {
   font-family: "Exo 2", sans-serif;
@@ -296,6 +292,33 @@ body {
               border-style: dotted;
               border-radius: 18px;
               padding: 16px;
+              position: relative;
+              cursor: pointer;
+
+              &:hover {
+                border-color: $border-black !important;
+                background-color: $gray-btn-select;
+              }
+
+              &__text-date-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                position: relative;
+                flex: 1;
+                min-width: 0;
+              }
+
+              &__date-wrapper {
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                img {
+                  width: 14px;
+                  height: 14px;
+                }
+              }
 
               input {
                 appearance: none;
@@ -338,6 +361,12 @@ body {
               &__content {
                 font-weight: 600;
                 min-width: 0;
+                min-height: 0;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 5; /* start showing ellipsis when 3rd line is reached */
+                white-space: normal;
               }
 
               &__description {
@@ -368,22 +397,33 @@ body {
                   &__description {
                     display: flex;
 
-                    input[type="text"] {
-                      appearance: none;
-                      background-color: transparent;
+                    // input[type="text"] {
+                    //   appearance: none;
+                    //   background-color: transparent;
 
-                      width: 100%;
-                      border: none;
-                      line-height: 1.5rem;
-                      outline: none;
-                    }
+                    //   width: 100%;
+                    //   border: none;
+                    //   line-height: 1.5rem;
+                    //   outline: none;
+                    // }
                   }
 
-                  &__content {
-                    input[type="text"] {
-                      font-weight: 600;
-                    }
-                  }
+                  // &__content {
+                  //   input[type="text"] {
+                  //     font-weight: 600;
+                  //   }
+
+                  //   textarea {
+                  //     // appearance: none;
+                  //     width: 100%;
+                  //     // height: fit-content;
+                  //     height: 1rem;
+                  //     max-height: 200px;
+                  //     resize: none;
+                  //     overflow: hidden;
+                  //     // outline: none;
+                  //   }
+                  // }
 
                   &__additional {
                     display: flex;
@@ -401,6 +441,31 @@ body {
                       height: 24px;
                       // text-align: center;
                     }
+                  }
+
+                  #input-content,
+                  #input-description {
+                    width: 100%;
+                    white-space: pre-line;
+                    max-height: 150px;
+                    overflow: auto;
+                    appearance: none;
+                    background-color: transparent;
+                    border: none;
+                    line-height: 1.5rem;
+                    outline: none;
+                  }
+
+                  #input-content {
+                    font-weight: 600;
+                    direction: ltr;
+                  }
+
+                  #input-content[placeholder]:empty::before,
+                  #input-description[placeholder]:empty::before {
+                    content: attr(placeholder);
+                    color: $gray-inactive;
+                    cursor: text;
                   }
                 }
 
@@ -469,15 +534,15 @@ body {
 }
 
 .task-priority1 {
-  border-style: solid !important;
+  border: 1px solid $gray-inactive !important;
 }
 
 .task-priority2 {
-  border-style: dashed !important;
+  border: 1px dashed $gray-inactive !important;
 }
 
 .task-priority3 {
-  border-style: dotted !important;
+  border: 1px dotted $gray-inactive !important;
 }
 
 .prj-create-form-disable {
@@ -496,60 +561,24 @@ body {
   display: none !important;
 }
 
-.rename-wrapper {
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
-  padding: 10px 18px;
-  border-radius: 18px;
-  background-color: $gray-primary;
-  .rename-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-
-    &__input-wrapper {
-      display: flex;
-
-      input {
-        appearance: none;
-        width: 100%;
-        border: none;
-        line-height: 1.5rem;
-        outline: none;
-        border-radius: 18px;
-        padding: 0 6px;
-      }
-    }
-
-    &__btn-wrapper {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      gap: 8px;
-
-      button {
-        padding: 6px 12px;
-      }
-
-      .cancel {
-        &:hover {
-          background-color: $gray-btn-select;
-        }
-      }
-
-      .apply {
-        background-color: $gray-btn-select;
-        &:disabled {
-          color: $gray-inactive;
-          cursor: not-allowed;
-        }
-
-        &:enabled:hover {
-          background-color: rgba(0, 0, 0, 0.5);
-          color: white;
-        }
-      }
-    }
-  }
+.task-completed {
+  text-decoration: line-through !important;
 }
+
+// #input-content,
+// #input-description {
+//   width: 100%;
+//   max-height: 150px;
+//   overflow: auto;
+
+//   appearance: none;
+//   background-color: transparent;
+
+//   border: none;
+//   line-height: 1.5rem;
+//   outline: none;
+// }
+
+// #input-content {
+//   font-weight: 600;
+// }
