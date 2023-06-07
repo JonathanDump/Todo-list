@@ -100,6 +100,7 @@
               border: none;
               line-height: 1.5rem;
               outline: none;
+              cursor: text;
             }
           }
         }
@@ -178,4 +179,13 @@
   visibility: visible !important;
   //   transform: scale(1) !important;
   opacity: 1 !important;
+}
+
+.disabled-input-data {
+  cursor: not-allowed !important;
+  color: $gray-inactive !important;
+}
+
+.task-edit-active {
+  border-color: $border-black !important;
 }

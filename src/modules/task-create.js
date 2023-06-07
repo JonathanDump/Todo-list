@@ -21,6 +21,12 @@ export function findTask(projects, projectId, taskId) {
   return project._prjTasks.find((task) => task.taskId === taskId);
 }
 
-export function changeTaskStatus(task, status) {
-  task.completed = status;
+// export function changeTaskStatus(task, status) {
+//   task.completed = status;
+// }
+
+export function editTask(task, newParameters) {
+  for (let [key, value] of Object.entries(newParameters)) {
+    task[key] = value;
+  }
 }

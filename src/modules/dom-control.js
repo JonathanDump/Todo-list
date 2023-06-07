@@ -5,7 +5,7 @@ import dueDateIcon from "/src/icons/due-date.svg";
 import { compareAsc, format } from "date-fns";
 import { getProjectsFromStorage } from "./storage-control";
 import { renameProject, superSort } from "./project-control";
-import { changeTaskStatus, findTask, initialCreateTask } from "./task-create";
+import { editTask, findTask, initialCreateTask } from "./task-create";
 import {
   addTodoButtonModule,
   renameWrapperModule,
@@ -368,7 +368,7 @@ export function toggleTaskStatus(e) {
   let projects = getProjectsFromStorage();
   let task = findTask(projects, projectId, taskId);
 
-  changeTaskStatus(task, checkBox.checked);
+  editTask(task, { completed: checkbox.checked });
   if (task.completed) {
     taskDom.classList.add("task-completed");
   } else {
@@ -443,6 +443,11 @@ export function loadTaskOverview(task, projectName, projectId) {
 export function enableEdit(e) {
   const overviewHeader = $qs(".task-overview-header__project-name");
   const overviewTaskName = $qs(".task-overview-content-wrapper__name");
+  const overviewTaskDescription = $qs(
+    ".task-overview-content-wrapper__description"
+  );
+  const buttonsWrapper = $qs(".task-overview-buttons-wrapper");
+  const taskDetailWrapper = $qs(".task-detail-wrapper");
 
   const projectName = overviewHeader.textContent;
   const projectId = overviewHeader.dataset.id;
@@ -450,11 +455,28 @@ export function enableEdit(e) {
 
   const projects = getProjectsFromStorage(overviewHeader.dataset.id);
   const task = findTask(projects, projectId, taskId);
-  const taskDetailWrapper = $qs(".task-detail-wrapper");
+
+  const inputsData = [...document.querySelectorAll('[data-input="data"')];
+
+  function enableInputs() {
+    inputsData.forEach((input) => {
+      input.removeAttribute("disabled");
+      input.classList.remove("disabled-input-data");
+      taskDetailWrapper.classList.remove("task-edit-active");
+    });
+  }
+
+  if (e.target.id === "task-detail-wrapper__checkbox") {
+    const checkbox = $qs("#task-detail-wrapper__checkbox");
+
+    editTask(task, { completed: checkbox.checked });
+
+    loadTaskOverview(task, projectName, projectId);
+
+    localStorage.setItem("projects", JSON.stringify(projects));
+  }
 
   if (e.target.closest(".task-overview-content-wrapper")) {
-    const buttonsWrapper = $qs(".task-overview-buttons-wrapper");
-
     const overviewTaskDescription = $qs(
       ".task-overview-content-wrapper__description"
     );
@@ -462,17 +484,30 @@ export function enableEdit(e) {
     buttonsWrapper.classList.add("task-overview-buttons-active");
     overviewTaskName.contentEditable = true;
     overviewTaskDescription.contentEditable = true;
+    inputsData.forEach((input) => {
+      input.setAttribute("disabled", true);
+      input.classList.add("disabled-input-data");
+    });
+    taskDetailWrapper.classList.add("task-edit-active");
 
     if (e.target === overviewTaskName || e.target === overviewTaskDescription) {
       e.target.focus();
     }
   }
 
-  if (e.target.id === "task-detail-wrapper__checkbox") {
-    const checkbox = $qs("#task-detail-wrapper__checkbox");
+  if (e.target.classList.contains("task-overview-buttons-wrapper__cancel")) {
+    enableInputs();
+    buttonsWrapper.classList.remove("task-overview-buttons-active");
+  }
 
-    changeTaskStatus(task, checkbox.checked);
-    loadTaskOverview(task, projectName, projectId);
+  if (e.target.classList.contains("task-overview-buttons-wrapper__apply")) {
+    const newName = overviewTaskName.textContent;
+    const newDescription = overviewTaskDescription.textContent;
+
+    editTask(task, { taskName: newName, taskDescription: newDescription });
+    enableInputs();
+
+    buttonsWrapper.classList.remove("task-overview-buttons-active");
 
     localStorage.setItem("projects", JSON.stringify(projects));
   }
