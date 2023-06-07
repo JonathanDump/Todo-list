@@ -1,3 +1,4 @@
+import { clearAllBodyScrollLocks, enableBodyScroll } from "body-scroll-lock";
 import "./index.html";
 import {
   projectsPlusBtn,
@@ -29,6 +30,12 @@ import {
   toggleTaskStatus,
   tasksListCompleted,
   $qs,
+  openTaskOverview,
+  toggleWindowAnimation,
+  enableEdit,
+  taskOverviewWindow,
+  populateTasksList,
+  headerName,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
@@ -62,6 +69,15 @@ document.addEventListener("click", ({ target }) => {
     document.querySelector(".more-window").remove();
     deactivateMoreBtn();
   }
+  if (
+    $qs(".task-overview-active") &&
+    (!target.closest(".task-overview-window") ||
+      target.closest(".task-overview-header__close-button-wrapper"))
+  ) {
+    $qs(".task-overview-bg").classList.remove("task-overview-active");
+    toggleWindowAnimation();
+    populateTasksList(headerName.dataset.id);
+  }
 });
 
 projectsList.addEventListener("click", deleteProject);
@@ -87,14 +103,22 @@ tasksList.addEventListener("click", cancelTaskCreate);
 tasksList.addEventListener("change", toggleTaskStatus);
 tasksListCompleted.addEventListener("change", toggleTaskStatus);
 
+tasksList.addEventListener("click", openTaskOverview);
+tasksListCompleted.addEventListener("click", openTaskOverview);
+
+// document.addEventListener("click", enableEdit);
+
 // document.addEventListener("click", (e) => console.log(e.target));
 
-// tasksList.addEventListener("focusout", () => {
-//   if (!$qs(".task-create")) {
-//     return;
-//   }
-//   const taskNameInput = $qs("#input-description");
-//   if (!taskNameInput.textContent.trim().length) {
-//     taskNameInput.innerHTML = "";
-//   }
-// });
+taskOverviewWindow.addEventListener("click", enableEdit);
+
+// const domMap = {
+//   projectList: ".projects__list",
+//   taskList: ".tasks",
+// };
+
+// const dom = Object.fromEntries(
+//   Object.entries(domMap).map(([key, value]) => [key, $qs(value)])
+// );
+
+// console.log(dom.projectList);

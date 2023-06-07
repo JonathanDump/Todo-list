@@ -1,0 +1,29 @@
+input[type="checkbox"] {
+  appearance: none;
+  background-color: #ffffff;
+  margin: 0;
+  font: inherit;
+  color: black;
+  min-width: 1.15em;
+  min-height: 1.15em;
+  border: 0.15em solid black;
+  border-radius: 25px;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+
+  &::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 25px;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em $header-black;
+  }
+
+  &:checked::before {
+    transform: scale(1);
+  }
+}

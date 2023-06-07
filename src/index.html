@@ -15,6 +15,55 @@
     <title>Todo list</title>
   </head>
   <body>
+    <div class="task-overview-bg">
+      <div class="task-overview-window" tabindex="-1">
+        <div class="task-overview-header">
+          <div class="task-overview-header__project-name"></div>
+          <div class="task-overview-header__close-button-wrapper">
+            <button class="task-overview-header__close-button">
+              <img src="/src/icons/close-outline.svg" alt="close" />
+            </button>
+          </div>
+        </div>
+        <div class="task-overview-main">
+          <div class="task-overview-info">
+            <div class="task-detail-wrapper">
+              <div class="task-detail-wrapper__checkbox-wrapper">
+                <input type="checkbox" id="task-detail-wrapper__checkbox" />
+              </div>
+              <div class="task-overview-content-wrapper">
+                <div class="task-overview-content-wrapper__name"></div>
+                <div class="task-overview-content-wrapper__description"></div>
+              </div>
+            </div>
+            <div class="task-overview-buttons-wrapper">
+              <button class="task-overview-buttons-wrapper__cancel">
+                Cancel
+              </button>
+              <button class="task-overview-buttons-wrapper__apply">
+                Apply
+              </button>
+            </div>
+          </div>
+          <div class="task-overview-additional">
+            <div class="additional-project-wrapper">
+              <div class="project-name">Project</div>
+              <div class="project-data"></div>
+            </div>
+            <hr />
+            <div class="additional-due-date-wrapper">
+              <div class="due-date-name">Due date</div>
+              <div class="due-date-data"></div>
+            </div>
+            <hr />
+            <div class="additional-priority-wrapper">
+              <div class="priority-name">Priority</div>
+              <div class="priority-data"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="todo-app">
       <header class="header">
         <div class="header__hamburger">
@@ -41,29 +90,6 @@
               <img src="/src/icons/calendar-week.svg" alt="" />
               This week
             </button>
-
-            <!-- <div class="rename-wrapper">
-              <form action="" class="rename-form">
-                <div class="rename-form__input-wrapper">
-                  <input type="text" placeholder="New name" required />
-                </div>
-                <div class="rename-form__btn-wrapper">
-                  <button
-                    class="rename-form__btn cancel"
-                    id="rename-form__btn-cancel"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    class="rename-form__btn apply"
-                    id="rename-form__btn-apply"
-                    disabled
-                  >
-                    Apply
-                  </button>
-                </div>
-              </form>
-            </div> -->
           </div>
           <div class="projects">
             <div class="projects__projects-section-wrapper">
@@ -143,33 +169,7 @@
                 </form>
               </div>
             </div>
-            <div class="projects__list">
-              <!-- <div class="projects__item-wrapper">
-                <button class="projects__item">
-                  <div class="item-name">Water plants</div>
-                  <div class="item-more">
-                    <img
-                      class="item-more__icon"
-                      src="/src/icons/more-icon.svg"
-                      alt="more-icon"
-                    />
-                  </div>
-                </button>
-              </div>
-
-              <div class="projects__item-wrapper">
-                <button class="projects__item">
-                  <div class="item-name">Milk the cow</div>
-                  <div class="item-more">
-                    <img
-                      class="item-more__icon"
-                      src="/src/icons/more-icon.svg"
-                      alt="more-icon"
-                    />
-                  </div>
-                </button>
-              </div> -->
-            </div>
+            <div class="projects__list"></div>
           </div>
         </div>
         <div class="main">
@@ -177,65 +177,7 @@
             <div class="name">
               <div class="name__text"></div>
             </div>
-            <div class="tasks">
-              <!-- <div class="task">
-                <input type="checkbox" id="todo" name="todo" />
-                <div class="task__text-wrapper">
-                  <div class="task__content">Water the sunflower</div>
-                  <div class="task__description">
-                    fdgdfgdfg Water plantsWater plantsWater plantsWater
-                    plantsWater plantsWater plantsWater plantsWater plantsWater
-                    plantsWater plants
-                  </div>
-                </div>
-              </div>
-              <div class="task">
-                <input type="checkbox" id="todo" name="todo" />
-                <div class="task__text-wrapper">
-                  <div class="task__content">Water the sunflower</div>
-                  <div class="task__description">fdgdfgdfg</div>
-                </div>
-              </div> -->
-              <!-- <div class="task-create">
-                <form action="">
-                  <div class="info-wrapper">
-                    <div class="info-wrapper__content">
-                      <input
-                        type="text"
-                        name="content"
-                        id="content"
-                        placeholder="Task name"
-                        required
-                      />
-                    </div>
-                    <div class="info-wrapper__description">
-                      <input
-                        type="text"
-                        name="description"
-                        id="description"
-                        placeholder="Description"
-                      />
-                    </div>
-                    <div class="info-wrapper__additional">
-                      <input type="date" name="date" id="date" />
-                      <select name="priority" id="priority">
-                        <option value="priority1">Priority 1</option>
-                        <option value="priority2">Priority 2</option>
-                        <option value="priority3">Priority 3</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-btn-wrapper">
-                    <button type="button" class="form-btn-wrapper__btn-cancel">
-                      Cancel
-                    </button>
-                    <button disabled class="form-btn-wrapper__btn-add-task">
-                      Add task
-                    </button>
-                  </div>
-                </form>
-              </div> -->
-            </div>
+            <div class="tasks"></div>
             <div class="add-todo-btn-wrapper"></div>
             <div class="tasks completed"></div>
           </div>

@@ -28,10 +28,13 @@ export const projectInputName = document.querySelector("#project-create__name");
 const projectCreateForm =
   projectsSectionWrapper.querySelector(".project-create");
 export const projectsList = document.querySelector(".projects__list");
-const headerName = document.querySelector(".name__text");
+export const headerName = document.querySelector(".name__text");
 export const tasksList = document.querySelector(".tasks");
 export const addTodoButton = document.querySelector(".add-todo-btn-wrapper");
 export const tasksListCompleted = document.querySelector(".tasks.completed");
+export const taskOverviewWindow = document.querySelector(
+  ".task-overview-window"
+);
 
 /////////FUNCTIONS
 export const $qs = (selector) => document.querySelector(selector);
@@ -214,11 +217,6 @@ export function checkCreateTaskFormInput(e) {
     return;
   }
 
-  // if ($qs("#input-content").textContent.length > 500) {
-  //   e.preventDefault();
-  //   alert("Dfsf");
-  // }
-
   $qs(".form-btn-wrapper__btn-add-task").disabled =
     !$qs("#input-content").textContent.trim();
 }
@@ -256,8 +254,8 @@ export function renderProjectPage(e) {
   populateTasksList(projectId);
 }
 
-function populateTasksList(projectId) {
-  console.log(tasksListCompleted);
+export function populateTasksList(projectId) {
+  addTodoButton.classList.remove("add-todo-btn-disable");
   const projects = getProjectsFromStorage();
   const project = projects.find((project) => project._prjId === projectId);
 
@@ -285,7 +283,9 @@ function populateTasksList(projectId) {
   </div>
 </div>`;
 
-      const taskDom = document.querySelector(`.task[data-id="${task.taskId}"]`);
+      const taskDom = document.querySelector(
+        `.task[data-id="${task.taskId}"] .task__content`
+      );
       taskDom.classList.add("task-completed");
     } else {
       tasksList.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
@@ -318,8 +318,10 @@ export function createTask(e) {
   let taskDueDate = $qs("#date").value;
   if (taskDueDate) {
     taskDueDate = format(new Date($qs("#date").value), "dd MMM yyyy");
+  } else {
+    taskDueDate = "-";
   }
-  console.log(taskDueDate);
+
   const taskPriority = parseInt($qs("#priority").value);
   const projects = getProjectsFromStorage();
   const project = projects.find((project) => project.getPrjId() === projectId);
@@ -331,7 +333,7 @@ export function createTask(e) {
   localStorage.setItem("projects", JSON.stringify(projects));
 
   populateTasksList(projectId);
-  addTodoButton.classList.remove("add-todo-btn-disable");
+  // addTodoButton.classList.remove("add-todo-btn-disable");
 }
 
 export function cancelTaskCreate(e) {
@@ -348,26 +350,23 @@ export function closeCreateTaskForm() {
 
 export function toggleTaskStatus(e) {
   if (e.target.id !== "task-checkbox") {
-    console.log("1");
     return;
   }
 
   if (!e.target.closest(".task__checkbox-wrapper")) {
-    console.log(e.target);
-    console.log("2");
     return;
   }
-  console.log("3");
+
   const checkBox = e.target;
   const projectId = headerName.dataset.id;
   const taskId = e.target.closest(".task").dataset.id;
-  const taskDom = document.querySelector(`.task[data-id="${taskId}"]`);
+  const taskDom = document.querySelector(
+    `.task[data-id="${taskId}"] .task__content`
+  );
+  console.log(taskDom);
 
   let projects = getProjectsFromStorage();
   let task = findTask(projects, projectId, taskId);
-
-  // task.completed = checkBox.checked;
-  console.log(task);
 
   changeTaskStatus(task, checkBox.checked);
   if (task.completed) {
@@ -380,4 +379,101 @@ export function toggleTaskStatus(e) {
   populateTasksList(projectId);
 }
 
-// function setCheckBoxes() {}
+export function openTaskOverview(e) {
+  if (!e.target.closest(".task") || e.target.id === "task-checkbox") {
+    console.log("1");
+    return;
+  }
+  const taskOverview = $qs(".task-overview-bg");
+  taskOverview.classList.add("task-overview-active");
+
+  const projectId = headerName.dataset.id;
+  const taskId = e.target.closest(".task").dataset.id;
+  const projects = getProjectsFromStorage();
+  const task = findTask(projects, projectId, taskId);
+
+  setTimeout(toggleWindowAnimation, 50);
+
+  // const taskOverviewWindow = $qs(".task-overview-window");
+  loadTaskOverview(task, headerName.textContent, projectId);
+
+  e.stopPropagation();
+}
+
+export function toggleWindowAnimation() {
+  const taskOverviewWindow = $qs(".task-overview-window");
+  taskOverviewWindow.classList.toggle("task-overview-window-visible");
+}
+
+export function loadTaskOverview(task, projectName, projectId) {
+  const overviewHeader = $qs(".task-overview-header__project-name");
+  const overviewCheckbox = $qs("#task-detail-wrapper__checkbox");
+  const overviewTaskName = $qs(".task-overview-content-wrapper__name");
+  const overviewTaskDescription = $qs(
+    ".task-overview-content-wrapper__description"
+  );
+  const overviewProjectName = $qs(".project-data");
+  const overviewDueDate = $qs(".due-date-data");
+  const overviewPriority = $qs(".priority-data");
+  const taskDetailWrapper = $qs(".task-detail-wrapper");
+
+  taskDetailWrapper.classList.add(`task-priority${task.taskPriority}`);
+
+  overviewHeader.textContent = projectName;
+  overviewHeader.dataset.id = projectId;
+
+  overviewCheckbox.checked = task.completed;
+  if (overviewCheckbox.checked) {
+    overviewTaskName.classList.add("task-completed");
+  } else {
+    overviewTaskName.classList.remove("task-completed");
+  }
+  overviewTaskName.textContent = task.taskName;
+  overviewTaskName.dataset.id = task.taskId;
+
+  overviewTaskDescription.textContent = task.taskDescription;
+
+  overviewProjectName.textContent = projectName;
+
+  overviewDueDate.textContent = task.taskDueDate;
+
+  overviewPriority.textContent = task.taskPriority;
+}
+
+export function enableEdit(e) {
+  const overviewHeader = $qs(".task-overview-header__project-name");
+  const overviewTaskName = $qs(".task-overview-content-wrapper__name");
+
+  const projectName = overviewHeader.textContent;
+  const projectId = overviewHeader.dataset.id;
+  const taskId = overviewTaskName.dataset.id;
+
+  const projects = getProjectsFromStorage(overviewHeader.dataset.id);
+  const task = findTask(projects, projectId, taskId);
+  const taskDetailWrapper = $qs(".task-detail-wrapper");
+
+  if (e.target.closest(".task-overview-content-wrapper")) {
+    const buttonsWrapper = $qs(".task-overview-buttons-wrapper");
+
+    const overviewTaskDescription = $qs(
+      ".task-overview-content-wrapper__description"
+    );
+
+    buttonsWrapper.classList.add("task-overview-buttons-active");
+    overviewTaskName.contentEditable = true;
+    overviewTaskDescription.contentEditable = true;
+
+    if (e.target === overviewTaskName || e.target === overviewTaskDescription) {
+      e.target.focus();
+    }
+  }
+
+  if (e.target.id === "task-detail-wrapper__checkbox") {
+    const checkbox = $qs("#task-detail-wrapper__checkbox");
+
+    changeTaskStatus(task, checkbox.checked);
+    loadTaskOverview(task, projectName, projectId);
+
+    localStorage.setItem("projects", JSON.stringify(projects));
+  }
+}
