@@ -2,6 +2,7 @@ import trashIcon from "/src/icons/trash-icon.svg";
 import editIcon from "/src/icons/edit-icon.svg";
 import moreIcon from "/src/icons/more-icon.svg";
 import dueDateIcon from "/src/icons/due-date.svg";
+import xIcon from "/src/icons/close-outline.svg";
 import { compareAsc, format } from "date-fns";
 import { getProjectsFromStorage } from "./storage-control";
 import {
@@ -157,6 +158,7 @@ export function deleteProject(e) {
   localStorage.setItem("projects", JSON.stringify(projects));
 
   populateProjectsList();
+  clearMain();
 }
 
 export function openRenameProjectForm(e) {
@@ -271,6 +273,13 @@ export function renderProjectPage(e) {
   populateTasksList(projectId);
 }
 
+function clearMain() {
+  addTodoButton.classList.add("add-todo-btn-disable");
+  tasksList.innerHTML = "";
+  tasksListCompleted.innerHTML = "";
+  headerName.innerHTML = "";
+}
+
 export function populateTasksList(projectId) {
   addTodoButton.classList.remove("add-todo-btn-disable");
   const projects = getProjectsFromStorage();
@@ -303,6 +312,15 @@ export function populateTasksList(projectId) {
   ${dueDate}
   </div>
   </div>
+ <div class="task__delete-button-wrapper">
+  <button
+              class="task-delete-button"
+              id="task-delete-button"
+            >
+<img src="${xIcon}" alt="delete" />
+            </button>
+ </div>
+  
 </div>`;
 
       const taskDom = document.querySelector(
@@ -324,6 +342,15 @@ export function populateTasksList(projectId) {
   ${dueDate}
   </div>
   </div>
+  <div class="task__delete-button-wrapper">
+  <button
+              class="task-delete-button"
+              id="task-delete-button"
+            >
+<img src="${xIcon}" alt="delete" />
+            </button>
+ </div>
+  
 </div>`;
     }
   });
@@ -396,7 +423,11 @@ export function toggleTaskStatus(e) {
 }
 
 export function openTaskOverview(e) {
-  if (!e.target.closest(".task") || e.target.id === "task-checkbox") {
+  if (
+    !e.target.closest(".task") ||
+    e.target.id === "task-checkbox" ||
+    e.target.closest("#task-delete-button")
+  ) {
     return;
   }
   const taskOverview = $qs(".task-overview-bg");
@@ -577,4 +608,21 @@ export function changeOverviewProject(e) {
   pushTaskToProject(projects, newProjectId, task);
   localStorage.setItem("projects", JSON.stringify(projects));
   loadTaskOverview(task, project._prjName, newProjectId);
+}
+
+export function deleteTask(e) {
+  if (!e.target.closest("#task-delete-button")) {
+    console.log("1");
+    return;
+  }
+  console.log("2");
+  const projects = getProjectsFromStorage();
+  const projectId = headerName.dataset.id;
+  const taskId = e.target.closest(".task").dataset.id;
+  const task = findTask(projects, projectId, taskId);
+  const project = findProject(projects, projectId);
+
+  removeTaskFromProject(projects, projectId, task);
+  localStorage.setItem("projects", JSON.stringify(projects));
+  populateTasksList(projectId);
 }

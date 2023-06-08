@@ -43,6 +43,7 @@ import {
   overviewProjectsSelect,
   changeOverviewProject,
   enableInputs,
+  deleteTask,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
@@ -79,7 +80,7 @@ document.addEventListener("click", ({ target }) => {
   if (
     $qs(".task-overview-active") &&
     (!target.closest(".task-overview-window") ||
-      target.closest(".task-overview-header__close-button-wrapper"))
+      target.closest("#to-close-button"))
   ) {
     $qs(".task-overview-bg").classList.remove("task-overview-active");
     toggleWindowAnimation();
@@ -113,6 +114,9 @@ tasksListCompleted.addEventListener("change", toggleTaskStatus);
 
 tasksList.addEventListener("click", openTaskOverview);
 tasksListCompleted.addEventListener("click", openTaskOverview);
+
+tasksList.addEventListener("click", deleteTask);
+tasksListCompleted.addEventListener("click", deleteTask);
 
 taskOverviewWindow.addEventListener("click", enableEdit);
 

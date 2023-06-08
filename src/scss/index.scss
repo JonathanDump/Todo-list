@@ -359,6 +359,21 @@ body {
               &__date-wrapper {
                 line-height: 1.5rem;
               }
+
+              &__delete-button-wrapper {
+                border-radius: 50%;
+
+                .task-delete-button {
+                  padding: 6px;
+                  &:hover {
+                    background-color: $gray-btn-select;
+                  }
+                  img {
+                    width: 16px;
+                    height: 16px;
+                  }
+                }
+              }
             }
 
             .task-create {
