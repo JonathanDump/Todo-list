@@ -44,10 +44,14 @@ import {
   changeOverviewProject,
   enableInputs,
   deleteTask,
+  filterButtons,
+  renderAllTasks,
+  checkForRender,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
 import "./scss/index.scss";
+import { getAllTasks } from "./modules/project-control";
 
 console.log("123");
 
@@ -84,8 +88,9 @@ document.addEventListener("click", ({ target }) => {
   ) {
     $qs(".task-overview-bg").classList.remove("task-overview-active");
     toggleWindowAnimation();
-    populateTasksList(headerName.dataset.id);
     enableInputs();
+
+    checkForRender();
   }
 });
 
@@ -102,6 +107,18 @@ projectsList.addEventListener("click", renameProjectDOM);
 projectsList.addEventListener("click", renderProjectPage);
 
 addTodoButton.addEventListener("click", openCreateTaskForm);
+
+filterButtons.forEach((button) =>
+  button.addEventListener("click", () => {
+    if (button.id === "all-tasks") {
+      renderAllTasks();
+    }
+    if (button.id === "today") {
+    }
+    if (button.id === "this-week") {
+    }
+  })
+);
 
 tasksList.addEventListener("input", checkCreateTaskFormInput);
 

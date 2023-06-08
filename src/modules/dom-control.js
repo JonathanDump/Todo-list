@@ -3,10 +3,12 @@ import editIcon from "/src/icons/edit-icon.svg";
 import moreIcon from "/src/icons/more-icon.svg";
 import dueDateIcon from "/src/icons/due-date.svg";
 import xIcon from "/src/icons/close-outline.svg";
+import inboxIcon from "/src/icons/inbox.svg";
 import { compareAsc, format } from "date-fns";
 import { getProjectsFromStorage } from "./storage-control";
 import {
   findProject,
+  getAllTasks,
   pushTaskToProject,
   removeTaskFromProject,
   renameProject,
@@ -53,6 +55,10 @@ const overviewHeader = document.querySelector(
 const overviewTaskName = document.querySelector(
   ".task-overview-content-wrapper__name"
 );
+
+export const filterButtons = [
+  ...document.querySelectorAll(".top-filters__filter-btn"),
+];
 
 /////////FUNCTIONS
 export const $qs = (selector) => document.querySelector(selector);
@@ -298,7 +304,19 @@ export function populateTasksList(projectId) {
     }
 
     if (task.completed) {
-      tasksListCompleted.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
+      populateTasksListCompleted(task), dueDate;
+
+      const taskDom = document.querySelector(
+        `.task[data-id="${task.taskId}"] .task__content`
+      );
+      taskDom.classList.add("task-completed");
+    } else {
+      populateTasksListTodo(task, dueDate);
+    }
+  });
+}
+function populateTasksListCompleted(task, dueDate) {
+  tasksListCompleted.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}"  data-projectid="${task.projectId}">
       <div class="task__checkbox-wrapper">
     <input type="checkbox" id="task-checkbox" name="task" checked/>
     </div>
@@ -322,13 +340,10 @@ export function populateTasksList(projectId) {
  </div>
   
 </div>`;
+}
 
-      const taskDom = document.querySelector(
-        `.task[data-id="${task.taskId}"] .task__content`
-      );
-      taskDom.classList.add("task-completed");
-    } else {
-      tasksList.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
+function populateTasksListTodo(task, dueDate) {
+  tasksList.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}" data-projectid="${task.projectId}">
       <div class="task__checkbox-wrapper">
     <input type="checkbox" id="task-checkbox" name="task"/>
     </div>
@@ -352,8 +367,6 @@ export function populateTasksList(projectId) {
  </div>
   
 </div>`;
-    }
-  });
 }
 
 export function createTask(e) {
@@ -372,7 +385,13 @@ export function createTask(e) {
   const project = projects.find((project) => project.getPrjId() === projectId);
 
   project.addTask(
-    initialCreateTask({ taskName, taskDescription, taskDueDate, taskPriority })
+    initialCreateTask({
+      taskName,
+      taskDescription,
+      taskDueDate,
+      taskPriority,
+      projectId,
+    })
   );
 
   localStorage.setItem("projects", JSON.stringify(projects));
@@ -402,7 +421,7 @@ export function toggleTaskStatus(e) {
   }
 
   const checkBox = e.target;
-  const projectId = headerName.dataset.id;
+  const projectId = e.target.closest(".task").dataset.projectid;
   const taskId = e.target.closest(".task").dataset.id;
   const taskDom = document.querySelector(
     `.task[data-id="${taskId}"] .task__content`
@@ -419,7 +438,8 @@ export function toggleTaskStatus(e) {
   }
 
   localStorage.setItem("projects", JSON.stringify(projects));
-  populateTasksList(projectId);
+
+  checkForRender();
 }
 
 export function openTaskOverview(e) {
@@ -433,7 +453,7 @@ export function openTaskOverview(e) {
   const taskOverview = $qs(".task-overview-bg");
   taskOverview.classList.add("task-overview-active");
 
-  const projectId = headerName.dataset.id;
+  const projectId = e.target.closest(".task").dataset.projectid;
   const taskId = e.target.closest(".task").dataset.id;
   const projects = getProjectsFromStorage();
   const task = findTask(projects, projectId, taskId);
@@ -612,17 +632,55 @@ export function changeOverviewProject(e) {
 
 export function deleteTask(e) {
   if (!e.target.closest("#task-delete-button")) {
-    console.log("1");
     return;
   }
-  console.log("2");
+
   const projects = getProjectsFromStorage();
-  const projectId = headerName.dataset.id;
+  const projectId = e.target.closest(".task").dataset.projectid;
   const taskId = e.target.closest(".task").dataset.id;
   const task = findTask(projects, projectId, taskId);
   const project = findProject(projects, projectId);
 
   removeTaskFromProject(projects, projectId, task);
   localStorage.setItem("projects", JSON.stringify(projects));
-  populateTasksList(projectId);
+  checkForRender();
+}
+
+export function renderAllTasks() {
+  clearMain();
+  const tasks = getAllTasks();
+  const sortedTasks = tasks.sort(superSort.bind({ field: "taskPriority" }));
+
+  headerName.innerHTML = ` <img src="${inboxIcon}" alt="" />
+              All tasks`;
+  headerName.removeAttribute("data-id");
+  headerName.dataset.filter = "all-tasks";
+
+  let dueDate = "-";
+  sortedTasks.forEach((task) => {
+    if (task.taskDueDate) {
+      dueDate = format(new Date(task.taskDueDate), "dd MMM yyyy");
+    }
+
+    if (task.completed) {
+      populateTasksListCompleted(task, dueDate);
+
+      const taskDom = document.querySelector(
+        `.task[data-id="${task.taskId}"] .task__content`
+      );
+      taskDom.classList.add("task-completed");
+    } else {
+      populateTasksListTodo(task, dueDate);
+    }
+  });
+}
+
+export function checkForRender() {
+  if (headerName.dataset.filter === "all-tasks") {
+    renderAllTasks();
+  }
+
+  if (headerName.dataset.id) {
+    populateTasksList(headerName.dataset.id);
+  }
 }

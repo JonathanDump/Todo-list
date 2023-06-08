@@ -5,6 +5,7 @@ export const initialCreateTask = ({
   taskPriority = 3,
   completed = false,
   taskId = crypto.randomUUID(),
+  projectId,
 }) => {
   return {
     taskId,
@@ -13,6 +14,7 @@ export const initialCreateTask = ({
     taskDueDate,
     taskPriority,
     completed,
+    projectId,
   };
 };
 

@@ -65,11 +65,17 @@ export function removeTaskFromProject(projects, projectId, task) {
   project._prjTasks = project._prjTasks.filter((item) => item !== task);
 }
 
-export function pushTaskToProject(projects, projectId, task) {
-  let project = projects.find((project) => project.getPrjId() === projectId);
+export function pushTaskToProject(projects, newProjectId, task) {
+  let project = projects.find((project) => project.getPrjId() === newProjectId);
+  task.projectId = newProjectId;
   project.addTask(task);
 }
 
 export function findProject(projects, id) {
   return projects.find((project) => project.getPrjId() === id);
+}
+
+export function getAllTasks() {
+  let projects = getProjectsFromStorage();
+  return projects.map((project) => project._prjTasks).flat();
 }
