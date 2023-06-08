@@ -52,17 +52,35 @@
           <div class="task-overview-additional">
             <div class="additional-project-wrapper">
               <div class="project-name">Project</div>
-              <div class="project-data" data-input="data"></div>
+              <div class="project-data">
+                <select
+                  name="projects"
+                  id="overview-projects"
+                  data-input="data"
+                ></select>
+              </div>
             </div>
             <hr />
             <div class="additional-due-date-wrapper">
               <div class="due-date-name">Due date</div>
-              <div class="due-date-data" data-input="data"></div>
+              <div class="due-date-data">
+                <input type="date" id="overview-date" data-input="data" />
+              </div>
             </div>
             <hr />
             <div class="additional-priority-wrapper">
               <div class="priority-name">Priority</div>
-              <div class="priority-data" data-input="data"></div>
+              <div class="priority-data">
+                <select
+                  name="priority"
+                  id="overview-priority"
+                  data-input="data"
+                >
+                  <option data-priority="1" value="1">Priority 1</option>
+                  <option data-priority="2" value="2">Priority 2</option>
+                  <option data-priority="3" value="3">Priority 3</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

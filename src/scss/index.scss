@@ -51,6 +51,7 @@ body {
       .sidebar {
         box-sizing: border-box;
         min-width: 318px;
+        max-width: 318px;
         display: flex;
         flex-direction: column;
         padding: 32px 28px;
@@ -297,8 +298,6 @@ body {
               display: flex;
               align-items: center;
               gap: 16px;
-              // border: 1px solid black;
-              border-style: dotted;
               border-radius: 18px;
               padding: 16px;
               position: relative;

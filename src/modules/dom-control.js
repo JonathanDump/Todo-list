@@ -4,7 +4,13 @@ import moreIcon from "/src/icons/more-icon.svg";
 import dueDateIcon from "/src/icons/due-date.svg";
 import { compareAsc, format } from "date-fns";
 import { getProjectsFromStorage } from "./storage-control";
-import { renameProject, superSort } from "./project-control";
+import {
+  findProject,
+  pushTaskToProject,
+  removeTaskFromProject,
+  renameProject,
+  superSort,
+} from "./project-control";
 import { editTask, findTask, initialCreateTask } from "./task-create";
 import {
   addTodoButtonModule,
@@ -34,6 +40,17 @@ export const addTodoButton = document.querySelector(".add-todo-btn-wrapper");
 export const tasksListCompleted = document.querySelector(".tasks.completed");
 export const taskOverviewWindow = document.querySelector(
   ".task-overview-window"
+);
+export const overviewProjectsSelect =
+  document.querySelector("#overview-projects");
+export const overviewDueDate = document.querySelector("#overview-date");
+export const overviewPriority = document.querySelector("#overview-priority");
+
+const overviewHeader = document.querySelector(
+  ".task-overview-header__project-name"
+);
+const overviewTaskName = document.querySelector(
+  ".task-overview-content-wrapper__name"
 );
 
 /////////FUNCTIONS
@@ -265,7 +282,12 @@ export function populateTasksList(projectId) {
 
   tasksList.innerHTML = "";
   tasksListCompleted.innerHTML = "";
+  let dueDate = "-";
   sortedTasks.forEach((task) => {
+    if (task.taskDueDate) {
+      dueDate = format(new Date(task.taskDueDate), "dd MMM yyyy");
+    }
+
     if (task.completed) {
       tasksListCompleted.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}">
       <div class="task__checkbox-wrapper">
@@ -278,7 +300,7 @@ export function populateTasksList(projectId) {
   </div>
   <div class="task__date-wrapper">
   <img src="${dueDateIcon}" alt="" />
-  ${task.taskDueDate}
+  ${dueDate}
   </div>
   </div>
 </div>`;
@@ -299,13 +321,14 @@ export function populateTasksList(projectId) {
   </div>
   <div class="task__date-wrapper">
   <img src="${dueDateIcon}" alt="" />
-  ${task.taskDueDate}
+  ${dueDate}
   </div>
   </div>
 </div>`;
     }
   });
 }
+
 export function createTask(e) {
   if (!e.target.classList.contains("form-btn-wrapper__btn-add-task")) {
     return;
@@ -316,24 +339,18 @@ export function createTask(e) {
   const taskName = $qs("#input-content").textContent;
   const taskDescription = $qs("#input-description").textContent;
   let taskDueDate = $qs("#date").value;
-  if (taskDueDate) {
-    taskDueDate = format(new Date($qs("#date").value), "dd MMM yyyy");
-  } else {
-    taskDueDate = "-";
-  }
 
   const taskPriority = parseInt($qs("#priority").value);
   const projects = getProjectsFromStorage();
   const project = projects.find((project) => project.getPrjId() === projectId);
 
   project.addTask(
-    initialCreateTask(taskName, taskDescription, taskDueDate, taskPriority)
+    initialCreateTask({ taskName, taskDescription, taskDueDate, taskPriority })
   );
 
   localStorage.setItem("projects", JSON.stringify(projects));
 
   populateTasksList(projectId);
-  // addTodoButton.classList.remove("add-todo-btn-disable");
 }
 
 export function cancelTaskCreate(e) {
@@ -363,12 +380,11 @@ export function toggleTaskStatus(e) {
   const taskDom = document.querySelector(
     `.task[data-id="${taskId}"] .task__content`
   );
-  console.log(taskDom);
 
   let projects = getProjectsFromStorage();
   let task = findTask(projects, projectId, taskId);
 
-  editTask(task, { completed: checkbox.checked });
+  editTask(task, { completed: checkBox.checked });
   if (task.completed) {
     taskDom.classList.add("task-completed");
   } else {
@@ -381,7 +397,6 @@ export function toggleTaskStatus(e) {
 
 export function openTaskOverview(e) {
   if (!e.target.closest(".task") || e.target.id === "task-checkbox") {
-    console.log("1");
     return;
   }
   const taskOverview = $qs(".task-overview-bg");
@@ -394,7 +409,6 @@ export function openTaskOverview(e) {
 
   setTimeout(toggleWindowAnimation, 50);
 
-  // const taskOverviewWindow = $qs(".task-overview-window");
   loadTaskOverview(task, headerName.textContent, projectId);
 
   e.stopPropagation();
@@ -412,11 +426,12 @@ export function loadTaskOverview(task, projectName, projectId) {
   const overviewTaskDescription = $qs(
     ".task-overview-content-wrapper__description"
   );
-  const overviewProjectName = $qs(".project-data");
-  const overviewDueDate = $qs(".due-date-data");
-  const overviewPriority = $qs(".priority-data");
+
   const taskDetailWrapper = $qs(".task-detail-wrapper");
 
+  taskDetailWrapper.classList = "";
+
+  taskDetailWrapper.classList.add("task-detail-wrapper");
   taskDetailWrapper.classList.add(`task-priority${task.taskPriority}`);
 
   overviewHeader.textContent = projectName;
@@ -433,11 +448,18 @@ export function loadTaskOverview(task, projectName, projectId) {
 
   overviewTaskDescription.textContent = task.taskDescription;
 
-  overviewProjectName.textContent = projectName;
-
-  overviewDueDate.textContent = task.taskDueDate;
-
-  overviewPriority.textContent = task.taskPriority;
+  overviewProjectsSelect.innerHTML = "";
+  const projects = getProjectsFromStorage();
+  projects.forEach((project) => {
+    overviewProjectsSelect.innerHTML += `
+     <option value="${project._prjId}">${project._prjName.slice(
+      0,
+      15
+    )}</option>`;
+  });
+  overviewProjectsSelect.value = projectId;
+  overviewDueDate.value = task.taskDueDate;
+  overviewPriority.value = task.taskPriority;
 }
 
 export function enableEdit(e) {
@@ -453,18 +475,10 @@ export function enableEdit(e) {
   const projectId = overviewHeader.dataset.id;
   const taskId = overviewTaskName.dataset.id;
 
-  const projects = getProjectsFromStorage(overviewHeader.dataset.id);
+  const projects = getProjectsFromStorage();
   const task = findTask(projects, projectId, taskId);
 
   const inputsData = [...document.querySelectorAll('[data-input="data"')];
-
-  function enableInputs() {
-    inputsData.forEach((input) => {
-      input.removeAttribute("disabled");
-      input.classList.remove("disabled-input-data");
-      taskDetailWrapper.classList.remove("task-edit-active");
-    });
-  }
 
   if (e.target.id === "task-detail-wrapper__checkbox") {
     const checkbox = $qs("#task-detail-wrapper__checkbox");
@@ -511,4 +525,56 @@ export function enableEdit(e) {
 
     localStorage.setItem("projects", JSON.stringify(projects));
   }
+}
+export function enableInputs() {
+  const buttonsWrapper = $qs(".task-overview-buttons-wrapper");
+  const taskDetailWrapper = $qs(".task-detail-wrapper");
+  const inputsData = [...document.querySelectorAll('[data-input="data"')];
+  inputsData.forEach((input) => {
+    input.removeAttribute("disabled");
+    input.classList.remove("disabled-input-data");
+    taskDetailWrapper.classList.remove("task-edit-active");
+  });
+  buttonsWrapper.classList.remove("task-overview-buttons-active");
+}
+
+export function changeOverviewPriority(e) {
+  const projects = getProjectsFromStorage();
+  const projectId = overviewHeader.dataset.id;
+  const taskId = overviewTaskName.dataset.id;
+  const task = findTask(projects, projectId, taskId);
+  const taskPriority = +overviewPriority.value;
+
+  editTask(task, { taskPriority });
+
+  localStorage.setItem("projects", JSON.stringify(projects));
+  loadTaskOverview(task, headerName.textContent, projectId);
+}
+
+export function changeOverviewDueDate(e) {
+  const projects = getProjectsFromStorage();
+  const projectId = overviewHeader.dataset.id;
+  const taskId = overviewTaskName.dataset.id;
+  const taskDueDate = overviewDueDate.value;
+  const task = findTask(projects, projectId, taskId);
+
+  editTask(task, { taskDueDate });
+  localStorage.setItem("projects", JSON.stringify(projects));
+  loadTaskOverview(task, headerName.textContent, projectId);
+}
+
+export function changeOverviewProject(e) {
+  const projects = getProjectsFromStorage();
+
+  const projectId = overviewHeader.dataset.id;
+  const taskId = overviewTaskName.dataset.id;
+  const task = findTask(projects, projectId, taskId);
+  const newProjectId = overviewProjectsSelect.value;
+  const project = findProject(projects, newProjectId);
+
+  removeTaskFromProject(projects, projectId, task);
+
+  pushTaskToProject(projects, newProjectId, task);
+  localStorage.setItem("projects", JSON.stringify(projects));
+  loadTaskOverview(task, project._prjName, newProjectId);
 }

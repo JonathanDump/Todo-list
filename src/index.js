@@ -36,6 +36,13 @@ import {
   taskOverviewWindow,
   populateTasksList,
   headerName,
+  overviewPriority,
+  changeOverviewPriority,
+  changeOverviewDueDate,
+  overviewDueDate,
+  overviewProjectsSelect,
+  changeOverviewProject,
+  enableInputs,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
@@ -77,6 +84,7 @@ document.addEventListener("click", ({ target }) => {
     $qs(".task-overview-bg").classList.remove("task-overview-active");
     toggleWindowAnimation();
     populateTasksList(headerName.dataset.id);
+    enableInputs();
   }
 });
 
@@ -106,19 +114,12 @@ tasksListCompleted.addEventListener("change", toggleTaskStatus);
 tasksList.addEventListener("click", openTaskOverview);
 tasksListCompleted.addEventListener("click", openTaskOverview);
 
-// document.addEventListener("click", enableEdit);
-
-// document.addEventListener("click", (e) => console.log(e.target));
-
 taskOverviewWindow.addEventListener("click", enableEdit);
 
-// const domMap = {
-//   projectList: ".projects__list",
-//   taskList: ".tasks",
-// };
+overviewPriority.addEventListener("change", changeOverviewPriority);
 
-// const dom = Object.fromEntries(
-//   Object.entries(domMap).map(([key, value]) => [key, $qs(value)])
-// );
+overviewDueDate.addEventListener("change", changeOverviewDueDate);
 
-// console.log(dom.projectList);
+overviewProjectsSelect.addEventListener("change", changeOverviewProject);
+
+// document.addEventListener("click", (e) => console.log(e.target));

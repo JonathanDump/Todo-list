@@ -59,3 +59,17 @@ export function renameProject(newName, id) {
 export function superSort(a, b) {
   return a[this.field] - b[this.field];
 }
+
+export function removeTaskFromProject(projects, projectId, task) {
+  let project = projects.find((project) => project.getPrjId() === projectId);
+  project._prjTasks = project._prjTasks.filter((item) => item !== task);
+}
+
+export function pushTaskToProject(projects, projectId, task) {
+  let project = projects.find((project) => project.getPrjId() === projectId);
+  project.addTask(task);
+}
+
+export function findProject(projects, id) {
+  return projects.find((project) => project.getPrjId() === id);
+}
