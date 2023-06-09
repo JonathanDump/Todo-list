@@ -47,6 +47,10 @@ import {
   filterButtons,
   renderAllTasks,
   checkForRender,
+  renderTodayTasks,
+  clearMain,
+  deactivateSidebarButtons,
+  renderThisWeekTasks,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
@@ -89,7 +93,7 @@ document.addEventListener("click", ({ target }) => {
     $qs(".task-overview-bg").classList.remove("task-overview-active");
     toggleWindowAnimation();
     enableInputs();
-
+    clearMain();
     checkForRender();
   }
 });
@@ -110,12 +114,17 @@ addTodoButton.addEventListener("click", openCreateTaskForm);
 
 filterButtons.forEach((button) =>
   button.addEventListener("click", () => {
+    clearMain();
+    deactivateSidebarButtons();
+    button.classList.add("list-btn-active");
     if (button.id === "all-tasks") {
       renderAllTasks();
     }
     if (button.id === "today") {
+      renderTodayTasks();
     }
     if (button.id === "this-week") {
+      renderThisWeekTasks();
     }
   })
 );
@@ -143,4 +152,4 @@ overviewDueDate.addEventListener("change", changeOverviewDueDate);
 
 overviewProjectsSelect.addEventListener("change", changeOverviewProject);
 
-// document.addEventListener("click", (e) => console.log(e.target));
+document.addEventListener("click", (e) => console.log(e.target));

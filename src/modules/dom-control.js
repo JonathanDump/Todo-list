@@ -4,7 +4,10 @@ import moreIcon from "/src/icons/more-icon.svg";
 import dueDateIcon from "/src/icons/due-date.svg";
 import xIcon from "/src/icons/close-outline.svg";
 import inboxIcon from "/src/icons/inbox.svg";
-import { compareAsc, format } from "date-fns";
+import todayIcon from "/src/icons/calendar-today.svg";
+import weekIcon from "/src/icons/calendar-week.svg";
+
+import { compareAsc, format, getWeek } from "date-fns";
 import { getProjectsFromStorage } from "./storage-control";
 import {
   findProject,
@@ -261,9 +264,9 @@ export function renderProjectPage(e) {
     addTodoButton.innerHTML += addTodoButtonModule;
   }
 
-  const projectsButtons = [...document.querySelectorAll(".projects__item")];
-  projectsButtons.forEach((btn) => btn.classList.remove("list-btn-active"));
-
+  // const projectsButtons = [...document.querySelectorAll(".projects__item")];
+  // projectsButtons.forEach((btn) => btn.classList.remove("list-btn-active"));
+  deactivateSidebarButtons();
   tasksList.innerHTML = "";
   const projectId = e.target.closest(".projects__item-wrapper").dataset.id;
   const projectButton = document.querySelector(
@@ -279,7 +282,16 @@ export function renderProjectPage(e) {
   populateTasksList(projectId);
 }
 
-function clearMain() {
+export function deactivateSidebarButtons() {
+  if (!document.querySelector(".list-btn-active")) {
+    return;
+  }
+  document
+    .querySelector(".list-btn-active")
+    .classList.remove("list-btn-active");
+}
+
+export function clearMain() {
   addTodoButton.classList.add("add-todo-btn-disable");
   tasksList.innerHTML = "";
   tasksListCompleted.innerHTML = "";
@@ -297,14 +309,18 @@ export function populateTasksList(projectId) {
 
   tasksList.innerHTML = "";
   tasksListCompleted.innerHTML = "";
-  let dueDate = "-";
-  sortedTasks.forEach((task) => {
+  renderTasksUi(sortedTasks);
+}
+
+function renderTasksUi(tasks) {
+  tasks.forEach((task) => {
+    let dueDate = "-";
     if (task.taskDueDate) {
       dueDate = format(new Date(task.taskDueDate), "dd MMM yyyy");
     }
 
     if (task.completed) {
-      populateTasksListCompleted(task), dueDate;
+      populateTasksListCompleted(task, dueDate);
 
       const taskDom = document.querySelector(
         `.task[data-id="${task.taskId}"] .task__content`
@@ -315,6 +331,7 @@ export function populateTasksList(projectId) {
     }
   });
 }
+
 function populateTasksListCompleted(task, dueDate) {
   tasksListCompleted.innerHTML += `<div class="task task-priority${task.taskPriority}" data-id="${task.taskId}"  data-projectid="${task.projectId}">
       <div class="task__checkbox-wrapper">
@@ -646,8 +663,22 @@ export function deleteTask(e) {
   checkForRender();
 }
 
+export function checkForRender() {
+  if (headerName.dataset.filter === "all-tasks") {
+    renderAllTasks();
+  }
+  if (headerName.dataset.filter === "today") {
+    renderTodayTasks();
+  }
+  if (headerName.dataset.filter === "this-week") {
+    renderThisWeekTasks();
+  }
+  if (headerName.dataset.id) {
+    populateTasksList(headerName.dataset.id);
+  }
+}
+
 export function renderAllTasks() {
-  clearMain();
   const tasks = getAllTasks();
   const sortedTasks = tasks.sort(superSort.bind({ field: "taskPriority" }));
 
@@ -656,31 +687,38 @@ export function renderAllTasks() {
   headerName.removeAttribute("data-id");
   headerName.dataset.filter = "all-tasks";
 
-  let dueDate = "-";
-  sortedTasks.forEach((task) => {
-    if (task.taskDueDate) {
-      dueDate = format(new Date(task.taskDueDate), "dd MMM yyyy");
-    }
-
-    if (task.completed) {
-      populateTasksListCompleted(task, dueDate);
-
-      const taskDom = document.querySelector(
-        `.task[data-id="${task.taskId}"] .task__content`
-      );
-      taskDom.classList.add("task-completed");
-    } else {
-      populateTasksListTodo(task, dueDate);
-    }
-  });
+  renderTasksUi(sortedTasks);
 }
 
-export function checkForRender() {
-  if (headerName.dataset.filter === "all-tasks") {
-    renderAllTasks();
-  }
+export function renderTodayTasks() {
+  const date = format(new Date(), "yyyy-MM-dd");
+  const tasks = getAllTasks();
+  let sortedTasks = tasks.sort(superSort.bind({ field: "taskPriority" }));
 
-  if (headerName.dataset.id) {
-    populateTasksList(headerName.dataset.id);
-  }
+  sortedTasks = sortedTasks.filter((task) => task.taskDueDate === date);
+
+  headerName.innerHTML = ` <img src="${todayIcon}" alt="" />
+              Today`;
+  headerName.removeAttribute("data-id");
+  headerName.dataset.filter = "today";
+
+  renderTasksUi(sortedTasks);
+}
+
+export function renderThisWeekTasks() {
+  const date = format(new Date(), "yyyy-MM-dd");
+  const tasks = getAllTasks();
+  let sortedTasks = tasks.sort(superSort.bind({ field: "taskPriority" }));
+
+  sortedTasks = sortedTasks.filter(
+    (task) =>
+      getWeek(new Date(task.taskDueDate), { weekStartsOn: 1 }) ===
+      getWeek(new Date(date), { weekStartsOn: 1 })
+  );
+
+  headerName.innerHTML = ` <img src="${weekIcon}" alt="" />
+              This week`;
+  headerName.removeAttribute("data-id");
+  headerName.dataset.filter = "this-week";
+  renderTasksUi(sortedTasks);
 }
