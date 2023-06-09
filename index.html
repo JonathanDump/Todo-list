@@ -15,29 +15,112 @@
     <title>Todo list</title>
   <script defer src="index.js"></script></head>
   <body>
+    <div class="task-overview-bg">
+      <div class="task-overview-window" tabindex="-1">
+        <div class="task-overview-header">
+          <div class="task-overview-header__project-name"></div>
+          <div class="task-overview-header__close-button-wrapper">
+            <button
+              class="task-overview-header__close-button"
+              id="to-close-button"
+            >
+              <img src="assets/close-outline.svg" alt="close" />
+            </button>
+          </div>
+        </div>
+        <div class="task-overview-main">
+          <div class="task-overview-info">
+            <div class="task-detail-wrapper">
+              <div class="task-detail-wrapper__checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  id="task-detail-wrapper__checkbox"
+                  data-input="data"
+                />
+              </div>
+              <div class="task-overview-content-wrapper">
+                <div class="task-overview-content-wrapper__name"></div>
+                <div class="task-overview-content-wrapper__description"></div>
+              </div>
+            </div>
+            <div class="task-overview-buttons-wrapper">
+              <button class="task-overview-buttons-wrapper__cancel">
+                Cancel
+              </button>
+              <button class="task-overview-buttons-wrapper__apply">
+                Apply
+              </button>
+            </div>
+          </div>
+          <div class="task-overview-additional">
+            <div class="additional-project-wrapper">
+              <div class="project-name">Project</div>
+              <div class="project-data">
+                <select
+                  name="projects"
+                  id="overview-projects"
+                  data-input="data"
+                ></select>
+              </div>
+            </div>
+            <hr />
+            <div class="additional-due-date-wrapper">
+              <div class="due-date-name">Due date</div>
+              <div class="due-date-data">
+                <input type="date" id="overview-date" data-input="data" />
+              </div>
+            </div>
+            <hr />
+            <div class="additional-priority-wrapper">
+              <div class="priority-name">Priority</div>
+              <div class="priority-data">
+                <select
+                  name="priority"
+                  id="overview-priority"
+                  data-input="data"
+                >
+                  <option data-priority="1" value="1">Priority 1</option>
+                  <option data-priority="2" value="2">Priority 2</option>
+                  <option data-priority="3" value="3">Priority 3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="todo-app">
       <header class="header">
         <div class="header__hamburger">
           <span class="material-symbols-outlined"> menu </span>
         </div>
-        <div class="header__add-btn-cont">
-          <button class="header__add-btn">
-            <img src="assets/header-add-btn.svg" alt="add-button" />
-          </button>
-        </div>
+        <div class="header__tagline">Just do It!</div>
       </header>
       <div class="app-wrapper">
+        <div class="sidebar-bg"></div>
         <div class="sidebar">
           <div class="top-filters">
-            <button class="top-filters__filter-btn">
+            <button
+              class="top-filters__filter-btn"
+              id="all-tasks"
+              data-button="sidebar"
+            >
               <img src="assets/inbox.svg" alt="" />
-              Inbox
+              All tasks
             </button>
-            <button class="top-filters__filter-btn">
+            <button
+              class="top-filters__filter-btn"
+              id="today"
+              data-button="sidebar"
+            >
               <img src="assets/calendar-today.svg" alt="" />
               Today
             </button>
-            <button class="top-filters__filter-btn">
+            <button
+              class="top-filters__filter-btn"
+              id="this-week"
+              data-button="sidebar"
+            >
               <img src="assets/calendar-week.svg" alt="" />
               This week
             </button>
@@ -120,133 +203,17 @@
                 </form>
               </div>
             </div>
-            <div class="projects__list">
-              <div class="projects__item-wrapper">
-                <button class="projects__item">
-                  <div class="item-name">Water plants</div>
-                  <div class="item-more">
-                    <img
-                      class="item-more__icon"
-                      src="assets/more-icon.svg"
-                      alt="more-icon"
-                    />
-                  </div>
-                </button>
-              </div>
-
-              <div class="projects__item-wrapper">
-                <button class="projects__item">
-                  <div class="item-name">Water plants</div>
-                  <div class="item-more">
-                    <img
-                      class="item-more__icon"
-                      src="assets/more-icon.svg"
-                      alt="more-icon"
-                    />
-                  </div>
-                </button>
-              </div>
-            </div>
+            <div class="projects__list"></div>
           </div>
         </div>
         <div class="main">
           <div class="main__content-wrapper">
             <div class="name">
-              <div class="name__text">Water plants</div>
+              <div class="name__text"></div>
             </div>
-            <div class="tasks">
-              <div class="task">
-                <input type="checkbox" id="todo" name="todo" />
-                <div class="task__text-wrapper">
-                  <div class="task__content">Water the sunflower</div>
-                  <div class="task__description">
-                    fdgdfgdfg Water plantsWater plantsWater plantsWater
-                    plantsWater plantsWater plantsWater plantsWater plantsWater
-                    plantsWater plants
-                  </div>
-                </div>
-              </div>
-              <div class="task">
-                <input type="checkbox" id="todo" name="todo" />
-                <div class="task__text-wrapper">
-                  <div class="task__content">Water the sunflower</div>
-                  <div class="task__description">fdgdfgdfg</div>
-                </div>
-              </div>
-              <div class="task-create">
-                <form action="">
-                  <div class="info-wrapper">
-                    <div class="info-wrapper__content">
-                      <input
-                        type="text"
-                        name="content"
-                        id="content"
-                        placeholder="Task name"
-                        required
-                      />
-                    </div>
-                    <div class="info-wrapper__description">
-                      <input
-                        type="text"
-                        name="description"
-                        id="description"
-                        placeholder="Description"
-                      />
-                    </div>
-                    <div class="info-wrapper__additional">
-                      <input type="date" name="date" id="date" />
-                      <select name="priority" id="priority">
-                        <option value="priority1">Priority 1</option>
-                        <option value="priority2">Priority 2</option>
-                        <option value="priority3">Priority 3</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-btn-wrapper">
-                    <button type="button" class="form-btn-wrapper__btn-cancel">
-                      Cancel
-                    </button>
-                    <button disabled class="form-btn-wrapper__btn-add-task">
-                      Add task
-                    </button>
-                  </div>
-                </form>
-              </div>
-              <div class="tasks__add-todo-btn-wrapper">
-                <button class="tasks__add-todo-btn">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="9"
-                      cy="9"
-                      r="9"
-                      fill="#1C1D22"
-                      fill-opacity="0.08"
-                    />
-                    <g opacity="0.4">
-                      <path
-                        d="M12 9H6"
-                        stroke="#1C1D22"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M9 12L9 6"
-                        stroke="#1C1D22"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                      />
-                    </g>
-                  </svg>
-                  Add task
-                </button>
-              </div>
-            </div>
+            <div class="tasks"></div>
+            <div class="add-todo-btn-wrapper"></div>
+            <div class="tasks completed"></div>
           </div>
         </div>
       </div>
