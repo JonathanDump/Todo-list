@@ -54,8 +54,12 @@
 
     .task-overview-main {
       display: flex;
-      // height: calc(100% - 61px);
+      position: relative;
+      box-sizing: border-box;
+
+      height: calc(100% - 61px);
       // flex-wrap: wrap;
+      // height: fit-content;
 
       .task-overview-info {
         display: flex;
@@ -64,6 +68,7 @@
         gap: 8px;
         flex: 1;
         overflow-y: auto;
+        overflow-x: hidden;
 
         .task-detail-wrapper {
           display: flex;
@@ -71,6 +76,7 @@
           // border: 1px dashed $border-black;
           padding: 16px;
           border-radius: 18px;
+          // overflow: hidden;
 
           &__checkbox-wrapper {
             display: flex;
@@ -79,11 +85,12 @@
           }
 
           .task-overview-content-wrapper {
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            width: 100%;
-            // cursor: text;
+            max-width: 93%;
+            position: relative;
 
             &__name {
               font-weight: 600;
@@ -91,9 +98,8 @@
 
             &__name,
             &__description {
-              width: 100%;
+              max-width: 100%;
               white-space: pre-line;
-              // max-height: 150px;
               overflow: auto;
               appearance: none;
               background-color: transparent;
@@ -101,6 +107,7 @@
               line-height: 1.5rem;
               outline: none;
               cursor: text;
+              overflow-wrap: break-word;
             }
           }
         }
@@ -142,6 +149,7 @@
         padding: 16px;
         gap: 8px;
         width: 200px;
+        // box-sizing: border-box;
         // background-color: $gray-primary;
 
         hr {
@@ -201,4 +209,26 @@
 
 .task-edit-active {
   border-color: $border-black !important;
+}
+
+@media (max-width: 750px) {
+  .task-overview-main {
+    flex-direction: column !important;
+
+    .task-overview-additional {
+      box-sizing: border-box;
+      width: 100% !important;
+    }
+  }
+}
+
+@media (max-width: 580px) {
+  .task-overview-bg {
+    padding: 32px 0 0 0;
+    align-items: flex-end;
+
+    .task-overview-window {
+      height: 100%;
+    }
+  }
 }

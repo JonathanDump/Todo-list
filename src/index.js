@@ -51,15 +51,35 @@ import {
   clearMain,
   deactivateSidebarButtons,
   renderThisWeekTasks,
+  headerHamburger,
+  toggleSidebar,
+  screenWidth,
+  hideSidebarMedia,
+  sidebarBg,
+  sidebar,
+  toggleProjectsList,
+  projectsExtendButton,
 } from "./modules/dom-control";
 
 import { setProjectToStorage } from "./modules/storage-control";
 import "./scss/index.scss";
 import { getAllTasks } from "./modules/project-control";
 
-console.log("123");
-
 populateProjectsList();
+renderAllTasks();
+screenWidth.addEventListener("change", hideSidebarMedia);
+
+if (screenWidth.matches) {
+  hideSidebarMedia();
+  sidebar.addEventListener("click", (e) => {
+    if (e.target.closest('[data-button="sidebar"]')) {
+      toggleSidebar();
+    }
+  });
+}
+
+headerHamburger.addEventListener("click", toggleSidebar);
+sidebarBg.addEventListener("click", toggleSidebar);
 
 projectsPlusBtn.addEventListener("click", openCreateProjectForm);
 
@@ -151,5 +171,7 @@ overviewPriority.addEventListener("change", changeOverviewPriority);
 overviewDueDate.addEventListener("change", changeOverviewDueDate);
 
 overviewProjectsSelect.addEventListener("change", changeOverviewProject);
+
+projectsExtendButton.addEventListener("click", toggleProjectsList);
 
 document.addEventListener("click", (e) => console.log(e.target));

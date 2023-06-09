@@ -26,12 +26,17 @@ body {
     overflow-y: scroll;
     height: 100%;
     .header {
+      box-sizing: border-box;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 16px 32px;
       background-color: $header-black;
       color: white;
+      top: 0;
+      position: sticky;
+      z-index: 10;
+      height: 60px;
 
       &__hamburger {
         cursor: pointer;
@@ -48,6 +53,21 @@ body {
       min-height: calc(100vh - 62px);
       display: flex;
 
+      .sidebar-bg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: $gray-inactive;
+        z-index: 9;
+        visibility: hidden;
+        opacity: 0;
+        transition: all ease 0.15s;
+      }
+      .sidebar-bg-visible {
+        visibility: visible;
+        opacity: 1;
+      }
+
       .sidebar {
         box-sizing: border-box;
         min-width: 318px;
@@ -59,6 +79,12 @@ body {
         gap: 16px;
         font-size: 20px;
         transition: all ease 0.15s;
+        height: 100%;
+        position: fixed;
+        top: 60px;
+        transition: all ease 0.15s;
+        background-color: white;
+        z-index: 10;
 
         .top-filters {
           display: flex;
@@ -158,6 +184,11 @@ body {
           &__add-icon {
             display: flex;
             align-items: center;
+            transition: all ease 0.15s;
+          }
+
+          .extend-icon-rotate {
+            transform: rotate(90deg);
           }
 
           &__projects-btn-wrapper {
@@ -194,6 +225,14 @@ body {
             padding: 0 16px;
             gap: 8px;
             position: relative;
+            transition: all ease 0.15s;
+          }
+
+          .hide-projects-list {
+            transform: translate(0, -50%);
+            opacity: 0;
+            visibility: hidden;
+            z-index: -99;
           }
 
           &__item-wrapper {
@@ -264,6 +303,10 @@ body {
           }
         }
       }
+
+      .sidebar-hide {
+        transform: translate(-318px);
+      }
       .main {
         width: 100%;
         display: flex;
@@ -271,6 +314,8 @@ body {
         padding: 32px 46px;
         gap: 16px;
         min-width: 0;
+        margin-left: 318px;
+        transition: all ease 0.15s;
 
         &__content-wrapper {
           display: flex;
@@ -278,6 +323,7 @@ body {
           max-width: 800px;
           width: 100%;
           gap: 16px;
+          // position: relative;
 
           .name {
             display: flex;
@@ -351,6 +397,7 @@ body {
                 min-height: 0;
                 overflow: hidden;
                 display: -webkit-box;
+                overflow-wrap: break-word;
                 -webkit-box-orient: vertical;
                 -webkit-line-clamp: 5; /* start showing ellipsis when 3rd line is reached */
                 white-space: normal;
@@ -498,6 +545,9 @@ body {
             }
           }
         }
+      }
+      .main-margin-remove {
+        margin-left: 0;
       }
     }
   }

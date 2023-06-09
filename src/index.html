@@ -94,24 +94,33 @@
         <div class="header__hamburger">
           <span class="material-symbols-outlined"> menu </span>
         </div>
-        <div class="header__add-btn-cont">
-          <button class="header__add-btn">
-            <img src="/src/icons/header-add-btn.svg" alt="add-button" />
-          </button>
-        </div>
+        <div class="header__tagline">Just do It!</div>
       </header>
       <div class="app-wrapper">
+        <div class="sidebar-bg"></div>
         <div class="sidebar">
           <div class="top-filters">
-            <button class="top-filters__filter-btn" id="all-tasks">
+            <button
+              class="top-filters__filter-btn"
+              id="all-tasks"
+              data-button="sidebar"
+            >
               <img src="/src/icons/inbox.svg" alt="" />
               All tasks
             </button>
-            <button class="top-filters__filter-btn" id="today">
+            <button
+              class="top-filters__filter-btn"
+              id="today"
+              data-button="sidebar"
+            >
               <img src="/src/icons/calendar-today.svg" alt="" />
               Today
             </button>
-            <button class="top-filters__filter-btn" id="this-week">
+            <button
+              class="top-filters__filter-btn"
+              id="this-week"
+              data-button="sidebar"
+            >
               <img src="/src/icons/calendar-week.svg" alt="" />
               This week
             </button>

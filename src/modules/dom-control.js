@@ -26,6 +26,9 @@ import {
   taskModule,
 } from "./dom-patterns";
 
+export const headerHamburger = document.querySelector(".header__hamburger");
+export const sidebar = document.querySelector(".sidebar");
+export const main = document.querySelector(".main");
 export const projectsPlusBtn = document.querySelector(".projects__add-icon");
 export const projectsSectionWrapper = document.querySelector(
   ".projects__projects-section-wrapper"
@@ -62,6 +65,14 @@ const overviewTaskName = document.querySelector(
 export const filterButtons = [
   ...document.querySelectorAll(".top-filters__filter-btn"),
 ];
+
+export const screenWidth = window.matchMedia("(max-width:750px)");
+
+export const sidebarBg = document.querySelector(".sidebar-bg");
+
+export const projectsExtendButton = document.querySelector(
+  ".projects__extend-icon"
+);
 
 /////////FUNCTIONS
 export const $qs = (selector) => document.querySelector(selector);
@@ -137,8 +148,8 @@ export function populateProjectsList() {
   const projects = getProjectsFromStorage();
 
   projects.forEach((project) => {
-    projectsList.innerHTML += `<div class="projects__item-wrapper" data-id="${project.getPrjId()}">
-  <button class="projects__item">
+    projectsList.innerHTML += `<div class="projects__item-wrapper" data-id="${project.getPrjId()}" >
+  <button class="projects__item" data-button="sidebar">
     <div class="item-name">${project.getPrjName()}</div>
     <div class="item-more">
       <img  class="item-more__icon" src="${moreIcon}" alt="" />
@@ -264,8 +275,7 @@ export function renderProjectPage(e) {
     addTodoButton.innerHTML += addTodoButtonModule;
   }
 
-  // const projectsButtons = [...document.querySelectorAll(".projects__item")];
-  // projectsButtons.forEach((btn) => btn.classList.remove("list-btn-active"));
+  headerName.removeAttribute("data-filter");
   deactivateSidebarButtons();
   tasksList.innerHTML = "";
   const projectId = e.target.closest(".projects__item-wrapper").dataset.id;
@@ -456,6 +466,8 @@ export function toggleTaskStatus(e) {
 
   localStorage.setItem("projects", JSON.stringify(projects));
 
+  // tasksList.innerHTML = "";
+  // tasksListCompleted.innerHTML = "";
   checkForRender();
 }
 
@@ -664,6 +676,8 @@ export function deleteTask(e) {
 }
 
 export function checkForRender() {
+  tasksList.innerHTML = "";
+  tasksListCompleted.innerHTML = "";
   if (headerName.dataset.filter === "all-tasks") {
     renderAllTasks();
   }
@@ -721,4 +735,30 @@ export function renderThisWeekTasks() {
   headerName.removeAttribute("data-id");
   headerName.dataset.filter = "this-week";
   renderTasksUi(sortedTasks);
+}
+
+export function toggleSidebar(e) {
+  console.log("333");
+  if (screenWidth.matches) {
+    sidebarBg.classList.toggle("sidebar-bg-visible");
+    sidebar.classList.toggle("sidebar-hide");
+  } else {
+    sidebar.classList.toggle("sidebar-hide");
+    main.classList.toggle("main-margin-remove");
+    sidebarBg.classList.remove("sidebar-bg-visible");
+  }
+}
+
+export function hideSidebarMedia() {
+  sidebar.classList.add("sidebar-hide");
+  main.classList.add("main-margin-remove");
+  if (!screenWidth.matches) {
+    sidebar.classList.remove("sidebar-hide");
+    main.classList.remove("main-margin-remove");
+  }
+}
+
+export function toggleProjectsList() {
+  projectsExtendButton.classList.toggle("extend-icon-rotate");
+  projectsList.classList.toggle("hide-projects-list");
 }
